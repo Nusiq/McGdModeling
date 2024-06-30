@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://brjt7p30rj5we"]
+
+[ext_resource type="Script" path="res://ui/cached_file_dialog/cached_file_dialog.gd" id="1_u4p38"]
+
+[node name="CachedFileDialog" type="FileDialog"]
+script = ExtResource("1_u4p38")
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="dir_selected" from="." to="." method="_on_dir_selected"]
+[connection signal="file_selected" from="." to="." method="_on_file_selected"]

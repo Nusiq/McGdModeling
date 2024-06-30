@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://c75gt0qjodun5"]
+
+[ext_resource type="Script" path="res://ui/main/main_menu.gd" id="1_8wp5i"]
+[ext_resource type="PackedScene" uid="uid://brjt7p30rj5we" path="res://ui/cached_file_dialog/cached_file_dialog.tscn" id="2_nb5x8"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8wp5i")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OpenFileButton" type="Button" parent="CenterContainer"]
+layout_mode = 2
+text = "Hello World"
+
+[node name="CachedFileDialog" parent="." instance=ExtResource("2_nb5x8")]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(600, 450)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.json")
+
+[connection signal="pressed" from="CenterContainer/OpenFileButton" to="." method="_on_open_file_dialog_pressed"]
+[connection signal="file_selected" from="CachedFileDialog" to="." method="_on_cached_file_dialog_file_selected"]
