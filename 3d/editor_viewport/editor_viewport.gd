@@ -1,6 +1,22 @@
 extends Node3D
 
+class_name EditorViewport
 
+
+## Called from the child node $MouseGesture. Handles the mouse gesture
+## of rotateing the camera. 
+func on_rotate(delta_poz: Vector2):
+	print("Hello from MouseGesture.on_rotate")
+
+## Called from the child node $MouseGesture. Handles the mouse gesture
+## of panning the camera. 
+func on_pan(delta_poz: Vector2):
+	print("Hello from MouseGesture.on_pan")
+
+## Called from the child node $MouseGesture. Handles the mouse gesture
+## of zooming the camera. 
+func on_zoom(delta_poz: Vector2):
+	print("Hello from MouseGesture.on_zoom")
 
 
 # Called when the node enters the scene tree for the first time.

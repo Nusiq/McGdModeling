@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://byggwvgy1weio"]
+[gd_scene load_steps=8 format=3 uid="uid://byggwvgy1weio"]
 
-[ext_resource type="Script" path="res://3d/viewport/viewport.gd" id="1_wfm43"]
+[ext_resource type="Script" path="res://3d/editor_viewport/editor_viewport.gd" id="1_lx2y6"]
+[ext_resource type="Script" path="res://3d/editor_viewport/mouse_gesture.gd" id="2_22egi"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hea0x"]
 sky_top_color = Color(0.548963, 0.548963, 0.548963, 1)
@@ -23,8 +24,8 @@ tonemap_mode = 2
 lightmap_size_hint = Vector2i(14, 21)
 material = SubResource("StandardMaterial3D_ft4ka")
 
-[node name="Viewport" type="Node3D"]
-script = ExtResource("1_wfm43")
+[node name="EditorViewport" type="Node3D"]
+script = ExtResource("1_lx2y6")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_x2yi6")
@@ -45,3 +46,12 @@ light_energy = 0.5
 [node name="BackLight" type="DirectionalLight3D" parent="Camera3D"]
 transform = Transform3D(-0.984808, -0.0301537, -0.17101, 0, 0.984808, -0.173648, 0.173648, -0.17101, -0.969846, 0, 0, 0)
 light_energy = 2.0
+
+[node name="MouseGesture" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_22egi")
