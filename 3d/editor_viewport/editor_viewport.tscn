@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://byggwvgy1weio"]
+[gd_scene load_steps=7 format=3 uid="uid://byggwvgy1weio"]
 
 [ext_resource type="Script" path="res://3d/editor_viewport/editor_viewport.gd" id="1_lx2y6"]
 [ext_resource type="Script" path="res://3d/editor_viewport/mouse_gesture.gd" id="2_22egi"]
@@ -18,11 +18,7 @@ background_mode = 2
 sky = SubResource("Sky_vaoec")
 tonemap_mode = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ft4ka"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_cbc5o"]
-lightmap_size_hint = Vector2i(14, 21)
-material = SubResource("StandardMaterial3D_ft4ka")
+[sub_resource type="BoxMesh" id="BoxMesh_4g35t"]
 
 [node name="EditorViewport" type="Node3D"]
 script = ExtResource("1_lx2y6")
@@ -31,21 +27,7 @@ script = ExtResource("1_lx2y6")
 environment = SubResource("Environment_x2yi6")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_cbc5o")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.707107, -0.241845, 0.664463, 0, 0.939693, 0.34202, -0.707107, -0.241845, 0.664463, 4, 2, 4)
-
-[node name="KeyLight" type="DirectionalLight3D" parent="Camera3D"]
-transform = Transform3D(0.707107, 0.353553, -0.612372, 0, 0.866026, 0.5, 0.707107, -0.353553, 0.612372, 0, 0, 0)
-
-[node name="FillLight" type="DirectionalLight3D" parent="Camera3D"]
-transform = Transform3D(0.707107, -0.5, 0.5, 3.3062e-08, -0.707107, -0.707107, 0.707107, 0.5, -0.5, 0, 0, 0)
-light_energy = 0.5
-
-[node name="BackLight" type="DirectionalLight3D" parent="Camera3D"]
-transform = Transform3D(-0.984808, -0.0301537, -0.17101, 0, 0.984808, -0.173648, 0.173648, -0.17101, -0.969846, 0, 0, 0)
-light_energy = 2.0
+mesh = SubResource("BoxMesh_4g35t")
 
 [node name="MouseGesture" type="Control" parent="."]
 layout_mode = 3
@@ -55,3 +37,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_22egi")
+
+[node name="CameraTarget" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="CameraYaw" type="Node3D" parent="CameraTarget"]
+
+[node name="CameraPitch" type="Node3D" parent="CameraTarget/CameraYaw"]
+
+[node name="Camera3D" type="Camera3D" parent="CameraTarget/CameraYaw/CameraPitch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="KeyLight" type="DirectionalLight3D" parent="CameraTarget/CameraYaw/CameraPitch"]
+transform = Transform3D(0.707107, 0.353553, -0.612373, 0, 0.866026, 0.499999, 0.707107, -0.353553, 0.612373, 0, 0, 5)
+
+[node name="FillLight" type="DirectionalLight3D" parent="CameraTarget/CameraYaw/CameraPitch"]
+transform = Transform3D(0.707107, -0.5, 0.5, 3.3062e-08, -0.707107, -0.707107, 0.707107, 0.5, -0.5, 0, 0, 5)
+light_energy = 0.5
+
+[node name="BackLight" type="DirectionalLight3D" parent="CameraTarget/CameraYaw/CameraPitch"]
+transform = Transform3D(-0.984808, -0.0301536, -0.17101, 0, 0.984808, -0.173648, 0.173648, -0.17101, -0.969846, 0, 0, 5)
+light_energy = 2.0

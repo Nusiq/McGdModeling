@@ -12,14 +12,17 @@ var current_gesture := Gesture.NONE
 var gestrue_start_position := Vector2.ZERO
 
 
-func on_rotate(delta_poz: Vector2):
+func on_rotate(_delta_poz: Vector2) -> void:
 	push_error("Not Implemented MouseGesture.on_rotate")
 
-func on_pan(delta_poz: Vector2):
+func on_pan(_delta_poz: Vector2) -> void:
 	push_error("Not Implemented MouseGesture.on_pan")
 
-func on_zoom(delta_poz: Vector2):
+func on_zoom(_delta_poz: Vector2) -> void:
 	push_error("Not Implemented MouseGesture.on_zoom")
+
+func on_reset_gesture() -> void:
+	push_error("Not Implemented MouseGesture.on_reset_gesture")
 
 
 ## Called every frame automatically.
@@ -27,7 +30,7 @@ func on_zoom(delta_poz: Vector2):
 ## for the gestures if they're active.
 ## 
 ## @param delta The elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if Input.is_action_just_released("gesture.rotate_view", true):
 		current_gesture = Gesture.NONE
 	if Input.is_action_just_released("gesture.pan_view", true):
@@ -36,7 +39,7 @@ func _process(delta: float) -> void:
 		current_gesture = Gesture.NONE
 
 	if current_gesture != Gesture.NONE:
-		var delta_pos = get_global_mouse_position() - gestrue_start_position
+		var delta_pos := get_global_mouse_position() - gestrue_start_position
 		match current_gesture:
 			Gesture.ROTATING:
 				on_rotate(delta_pos)
@@ -44,6 +47,8 @@ func _process(delta: float) -> void:
 				on_pan(delta_pos)
 			Gesture.ZOOMING:
 				on_zoom(delta_pos)
+	else:
+		on_reset_gesture()
 
 ## Called automatically on GUI inputs.
 ## Starts the mouse gestures tracking when the proper key combination is
