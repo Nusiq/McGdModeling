@@ -6,12 +6,12 @@ extends Node
 class_name AppData
 
 ## Path to the applications data folder
-static var PATH = "{cache_dir}/{project_name}".format({
+static var PATH := "{cache_dir}/{project_name}".format({
 	"cache_dir": OS.get_data_dir(),
 	"project_name": ProjectSettings.get_setting("application/config/name")
 })
 
-static var CACHE_FILE = PATH + "/cache.json"
+static var CACHE_FILE := PATH + "/cache.json"
 
 #region Application Cache
 ## (private) value for caching the applications cache
@@ -38,6 +38,6 @@ static func save_cache() -> void:
 ## Handles saving the data when application is closed.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		save_cache()
+		AppData.save_cache()
 
 #endregion

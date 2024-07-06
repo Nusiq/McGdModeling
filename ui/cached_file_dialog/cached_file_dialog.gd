@@ -21,8 +21,8 @@ enum FileType {
 ## Returns the CachedFileDialog's cache from the AppData cache. If it doesn't
 ## exist, makes sure to add it.
 func get_cache() -> Dictionary:
-	var full_cache = AppData.get_cache()
-	var dialog_cache = full_cache.get("cached_file_dialog")
+	var full_cache := AppData.get_cache()
+	var dialog_cache: Variant = full_cache.get("cached_file_dialog")
 	if dialog_cache is Dictionary:
 		return dialog_cache
 	dialog_cache = {}
@@ -39,7 +39,7 @@ func save_cache(path: String, type: FileType) -> void:
 ## Loads the previously saved data from the cache into the file dialog
 ## settiings if it exists.
 func load_cache() -> bool:
-	var memory_group_cache = get_cache().get(memory_group)
+	var memory_group_cache: Dictionary = get_cache().get(memory_group)
 	# WARNING! Don't change the way the 'format_version' is checked. Match
 	# pattern is very strict about floats and integers and 1.0 != 1 for it.
 	# when the data is loaded from JSON file all numbers are saved as float.
