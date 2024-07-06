@@ -39,7 +39,9 @@ func _process(_delta: float) -> void:
 		current_gesture = Gesture.NONE
 
 	if current_gesture != Gesture.NONE:
-		var delta_pos := get_global_mouse_position() - gestrue_start_position
+		var delta_pos := (
+			get_global_mouse_position() - gestrue_start_position
+		) / size
 		match current_gesture:
 			Gesture.ROTATING:
 				on_rotate(delta_pos)

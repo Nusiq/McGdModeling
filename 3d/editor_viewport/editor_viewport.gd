@@ -19,13 +19,13 @@ var gesture_rotate_start := Vector3.ZERO
 ## Starting position for pan mouse gesture
 var gesture_pan_start := Vector3.ZERO
  
-const ROTATION_SENSITIVITY_DIVIDER = 80
+const ROTATION_SENSITIVITY_MULTIPLIER = 5.0
 
-const ZOOM_SENSITIVITY_DIVIDER = 150
+const ZOOM_SENSITIVITY_MULTIPLIER = 2.0
 const MIN_VIEW_DISTANCE = 0.02
 const MAX_VIEW_DISTANCE = 10_000.0
 
-const PAN_SENSITIVITY_DIVIDER = 300
+const PAN_SENSITIVITY_MULTIPLIER = 2.0
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of rotateing the camera. 
@@ -35,14 +35,14 @@ func on_rotate(delta_poz: Vector2) -> void:
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
 		is_mouse_gesture = true
 	camera_pitch.rotation.x = fposmod(
-		gesture_rotate_start.x- delta_poz.y/ROTATION_SENSITIVITY_DIVIDER, TAU)
+		gesture_rotate_start.x- delta_poz.y*ROTATION_SENSITIVITY_MULTIPLIER, TAU)
 	# Reverse yaw if upside down
 	var r := (
 		1
 		if gesture_rotate_start.x > 3.0/2.0*PI || gesture_rotate_start.x < PI/2
 		else -1)
 	camera_yaw.rotation.y = fposmod(
-		gesture_rotate_start.y-r*delta_poz.x/ROTATION_SENSITIVITY_DIVIDER, TAU)
+		gesture_rotate_start.y-r*delta_poz.x*ROTATION_SENSITIVITY_MULTIPLIER, TAU)
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of panning the camera. 
@@ -57,8 +57,8 @@ func on_pan(delta_poz: Vector2) -> void:
 	var rotate_basis := Basis.from_euler(gesture_rotate_start)
 	camera_target.position = (
 		gesture_pan_start +
-		rotate_basis.y * delta_poz.y*gesture_zoom_start/PAN_SENSITIVITY_DIVIDER +
-		rotate_basis.x * -delta_poz.x*gesture_zoom_start/PAN_SENSITIVITY_DIVIDER
+		rotate_basis.y * delta_poz.y*gesture_zoom_start*PAN_SENSITIVITY_MULTIPLIER +
+		rotate_basis.x * -delta_poz.x*gesture_zoom_start*PAN_SENSITIVITY_MULTIPLIER
 	)
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
@@ -68,7 +68,7 @@ func on_zoom(delta_poz: Vector2) -> void:
 		gesture_zoom_start = camera.position.z
 		is_mouse_gesture = true
 	camera.position.z = (
-		gesture_zoom_start + gesture_zoom_start*delta_poz.y/ZOOM_SENSITIVITY_DIVIDER)
+		gesture_zoom_start + gesture_zoom_start*delta_poz.y*ZOOM_SENSITIVITY_MULTIPLIER)
 	if camera.position.z < MIN_VIEW_DISTANCE:
 		camera.position.z = MIN_VIEW_DISTANCE
 	elif camera.position.z > MAX_VIEW_DISTANCE:
@@ -129,8 +129,8 @@ func _input(event: InputEvent) -> void:
 	if event.is_action("shortcut.zoom_in_view"):
 		if is_mouse_gesture:
 			return
-		on_zoom(Vector2.UP * 20)
+		on_zoom(Vector2.UP * 0.08)
 	elif event.is_action("shortcut.zoom_out_view"):
 		if is_mouse_gesture:
 			return
-		on_zoom(Vector2.DOWN * 20)
+		on_zoom(Vector2.DOWN * 0.08)

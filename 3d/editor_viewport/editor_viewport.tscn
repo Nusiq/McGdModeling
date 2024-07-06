@@ -39,7 +39,6 @@ grow_vertical = 2
 script = ExtResource("2_22egi")
 
 [node name="CameraTarget" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="CameraYaw" type="Node3D" parent="CameraTarget"]
 
