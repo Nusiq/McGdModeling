@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://byggwvgy1weio"]
+[gd_scene load_steps=9 format=3 uid="uid://byggwvgy1weio"]
 
 [ext_resource type="Script" path="res://3d/editor_viewport/editor_viewport.gd" id="1_lx2y6"]
 [ext_resource type="Script" path="res://3d/editor_viewport/mouse_gesture.gd" id="2_22egi"]
@@ -18,7 +18,13 @@ background_mode = 2
 sky = SubResource("Sky_vaoec")
 tonemap_mode = 2
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qevkv"]
+albedo_color = Color(0.279369, 0.35092, 0.466454, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_4g35t"]
+material = SubResource("StandardMaterial3D_qevkv")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u0c74"]
 
 [node name="EditorViewport" type="Node3D"]
 script = ExtResource("1_lx2y6")
@@ -28,6 +34,11 @@ environment = SubResource("Environment_x2yi6")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_4g35t")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("BoxShape3D_u0c74")
 
 [node name="MouseGesture" type="Control" parent="."]
 layout_mode = 3

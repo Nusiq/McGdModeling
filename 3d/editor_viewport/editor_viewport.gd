@@ -7,9 +7,10 @@ class_name EditorViewport
 @onready var camera_yaw: Node3D = $CameraTarget/CameraYaw
 @onready var camera_pitch: Node3D = $CameraTarget/CameraYaw/CameraPitch
 @onready var camera: Camera3D = $CameraTarget/CameraYaw/CameraPitch/Camera3D
+@onready var mouse_gesture: MouseGesture = $MouseGesture
 #endregion
 
-#region Gesture Interface
+#region Gesture Interface Config
 ## Controls the state of performing mouse gestures
 var is_mouse_gesture := false
 ## Staring zoom value for zoom mouse gesture
@@ -26,7 +27,9 @@ const MIN_VIEW_DISTANCE = 0.02
 const MAX_VIEW_DISTANCE = 10_000.0
 
 const PAN_SENSITIVITY_MULTIPLIER = 2.0
+#endregion
 
+#region Gesture Interface
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of rotateing the camera. 
 func on_rotate(delta_poz: Vector2) -> void:
@@ -82,13 +85,9 @@ func on_reset_gesture() -> void:
 		gesture_rotate_start = Vector3.ZERO
 		gesture_pan_start = Vector3.ZERO
 		is_mouse_gesture = false
-
 #endregion
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	draw_axes()
-
+#region Setup Functions
 func draw_axes() -> void:
 	var mesh: ImmediateMesh = ImmediateMesh.new()
 
@@ -120,17 +119,39 @@ func draw_axes() -> void:
 
 	add_child(mesh_instance)
 
+#endregion
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+## Moves the camera target to the location clicked by the user.
+func center_view_to_mouse(mouse_pos: Vector2) -> void:
+	var ray_length := 10000.0
+	var origin := camera.project_ray_origin(mouse_pos)
+	var target := origin + camera.project_ray_normal(mouse_pos) * ray_length
+	var space_state := get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(origin, target)
+	var result := space_state.intersect_ray(query)
+
+	if result:
+		camera_target.position = result.position
+	else:
+		print("No object was clicked.")
+
+func _ready() -> void:
+	draw_axes()
+
 func _process(_delta: float) -> void:
 	pass
 
 func _input(event: InputEvent) -> void:
-	if event.is_action("shortcut.zoom_in_view"):
+	if event.is_action_pressed("shortcut.zoom_in_view", false, true):
 		if is_mouse_gesture:
 			return
 		on_zoom(Vector2.UP * 0.08)
-	elif event.is_action("shortcut.zoom_out_view"):
+	elif event.is_action_pressed("shortcut.zoom_out_view", false, true):
 		if is_mouse_gesture:
 			return
 		on_zoom(Vector2.DOWN * 0.08)
+	elif event.is_action_pressed("shortcut.center_view_to_mouse", false, true):
+		center_view_to_mouse(
+			# Using position from mouse_gesture object and not from the event
+			# because the user could rebind the shortcut to a keyboard event
+			mouse_gesture.get_local_mouse_position())
