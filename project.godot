@@ -59,3 +59,7 @@ shortcut.center_view_to_mouse={
 [internationalization]
 
 locale/translations=PackedStringArray("res://localization/localization.en.translation", "res://localization/localization.pl.translation")
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=2

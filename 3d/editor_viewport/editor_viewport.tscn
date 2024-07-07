@@ -4,10 +4,10 @@
 [ext_resource type="Script" path="res://3d/editor_viewport/mouse_gesture.gd" id="2_22egi"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hea0x"]
-sky_top_color = Color(0.548963, 0.548963, 0.548963, 1)
-sky_horizon_color = Color(0.815686, 0.823529, 0.831373, 1)
-ground_bottom_color = Color(0.629675, 0.629675, 0.629675, 1)
-ground_horizon_color = Color(0.816503, 0.822407, 0.831731, 1)
+sky_top_color = Color(0.196078, 0.196078, 0.215686, 1)
+sky_horizon_color = Color(0.231373, 0.231373, 0.25098, 1)
+ground_bottom_color = Color(0.156863, 0.156863, 0.172549, 1)
+ground_horizon_color = Color(0.235294, 0.235294, 0.254902, 1)
 sun_angle_max = 0.0
 
 [sub_resource type="Sky" id="Sky_vaoec"]
@@ -19,7 +19,7 @@ sky = SubResource("Sky_vaoec")
 tonemap_mode = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qevkv"]
-albedo_color = Color(0.279369, 0.35092, 0.466454, 1)
+albedo_color = Color(0.66, 0.1386, 0.16467, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_4g35t"]
 material = SubResource("StandardMaterial3D_qevkv")
