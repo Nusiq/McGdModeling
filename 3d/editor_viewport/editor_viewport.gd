@@ -140,7 +140,7 @@ func center_view_to_mouse(mouse_pos: Vector2) -> void:
 	if result:
 		camera_target.position = result.position
 	else:
-		print("No object was clicked.")
+		Logging.info(tr("editor_viewport.center_view_to_mouse.no_target"))
 
 func _ready() -> void:
 	draw_axes()

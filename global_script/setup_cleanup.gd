@@ -10,6 +10,8 @@ func _ready() -> void:
 ## Handles saving the data when application is closed.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		print("Saving application data in: %s" % [AppData.PATH])
+		Logging.info(
+			tr("setup_cleanup.saving_app_data")
+			.format({"app_data_path": AppData.PATH}))
 		AppData.save_cache()
 		AppData.save_user_config()
