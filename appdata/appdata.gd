@@ -49,14 +49,3 @@ static func save_user_config() -> void:
 	DirAccess.make_dir_recursive_absolute(PATH)
 	XJSON.save_file(USER_CONFIG_FILE_PATH, get_user_config())
 #endregion
-
-#region Event Handlers
-
-## Handles saving the data when application is closed.
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		print("Saving application data in: %s" % [PATH])
-		AppData.save_cache()
-		AppData.save_user_config()
-
-#endregion
