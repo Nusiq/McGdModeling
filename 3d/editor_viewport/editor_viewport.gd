@@ -58,7 +58,7 @@ func on_rotate(delta_poz: Vector2) -> void:
 ## of panning the camera. 
 func on_pan(delta_poz: Vector2) -> void:
 	if not is_mouse_gesture:
-		gesture_zoom_start = camera.position.z
+		gesture_zoom_start = camera.position.z  # Zoom affects sensitivity
 		gesture_pan_start = camera_target.position
 		gesture_rotate_start = Vector3(
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
@@ -68,7 +68,7 @@ func on_pan(delta_poz: Vector2) -> void:
 	camera_target.position = (
 		gesture_pan_start +
 		rotate_basis.y * delta_poz.y*gesture_zoom_start*pan_sensitivity +
-		rotate_basis.x * -delta_poz.x*gesture_zoom_start*pan_sensitivity
+		rotate_basis.x * delta_poz.x*gesture_zoom_start*pan_sensitivity
 	)
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
@@ -97,6 +97,7 @@ func on_reset_gesture() -> void:
 #region Setup Functions
 func draw_axes() -> void:
 	var mesh: ImmediateMesh = ImmediateMesh.new()
+	const size = 20
 
 	mesh.clear_surfaces()
 	mesh.surface_begin(Mesh.PRIMITIVE_LINES)
@@ -104,17 +105,17 @@ func draw_axes() -> void:
 	# X axis (red)
 	mesh.surface_set_color(Color.RED)
 	mesh.surface_add_vertex(Vector3.ZERO)
-	mesh.surface_add_vertex(Vector3(1, 0, 0))
+	mesh.surface_add_vertex(Vector3(-1, 0, 0) * size)
 
 	# Y axis (green) 
 	mesh.surface_set_color(Color.GREEN)
 	mesh.surface_add_vertex(Vector3.ZERO)
-	mesh.surface_add_vertex(Vector3(0, 1, 0))
+	mesh.surface_add_vertex(Vector3(0, 1, 0) * size)
 
 	# Z axis (blue)
 	mesh.surface_set_color(Color.BLUE) 
 	mesh.surface_add_vertex(Vector3.ZERO)
-	mesh.surface_add_vertex(Vector3(0, 0, 1))
+	mesh.surface_add_vertex(Vector3(0, 0, 1) * size)
 	mesh.surface_end()
 
 	var material := StandardMaterial3D.new()
