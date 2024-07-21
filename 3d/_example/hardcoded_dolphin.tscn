@@ -1,0 +1,12 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4o4054pyeso"]
+
+[ext_resource type="Script" path="res://3d/_example/hardcoded_dolphin.gd" id="1_dojpg"]
+[ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="2_dt0pv"]
+[ext_resource type="PackedScene" uid="uid://dg6nqh6jyr4pm" path="res://3d/bone/bone.tscn" id="3_axjxh"]
+
+[node name="HardcodedDolphin" type="Node3D"]
+script = ExtResource("1_dojpg")
+
+[node name="EditorViewport" parent="." instance=ExtResource("2_dt0pv")]
+
+[node name="Bone" parent="." instance=ExtResource("3_axjxh")]

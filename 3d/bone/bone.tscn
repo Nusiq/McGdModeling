@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://dg6nqh6jyr4pm"]
+
+[ext_resource type="Script" path="res://3d/bone/bone.gd" id="1_rjobl"]
+
+[node name="Bone" type="Node3D"]
+script = ExtResource("1_rjobl")
+
+[node name="Pivot" type="Marker3D" parent="."]
+rotation_order = 0
+
+[node name="CounterPivot" type="Marker3D" parent="Pivot"]
+rotation_order = 0
