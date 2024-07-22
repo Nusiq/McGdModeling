@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://3d/_example/hardcoded_dolphin.gd" id="1_dojpg"]
 [ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="2_dt0pv"]
-[ext_resource type="PackedScene" uid="uid://dg6nqh6jyr4pm" path="res://3d/bone/bone.tscn" id="3_axjxh"]
+[ext_resource type="PackedScene" uid="uid://dg6nqh6jyr4pm" path="res://3d/mc_bone/mc_bone.tscn" id="3_axjxh"]
 
 [node name="HardcodedDolphin" type="Node3D"]
 script = ExtResource("1_dojpg")

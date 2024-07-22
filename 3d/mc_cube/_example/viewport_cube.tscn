@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bpi6th7xueg12"]
 
 [ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="1_dxty1"]
-[ext_resource type="PackedScene" uid="uid://ctr1wlvbry2cm" path="res://3d/cube/cube.tscn" id="2_r5jah"]
+[ext_resource type="PackedScene" uid="uid://n2ebk0b0yupt" path="res://3d/mc_cube/mc_cube.tscn" id="2_r5jah"]
 
 [node name="ViewportCube" type="Node3D"]
 

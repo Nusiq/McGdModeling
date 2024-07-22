@@ -1,9 +1,9 @@
 extends Node3D
 
-@onready var bone: Bone = $Bone
+@onready var bone: McBone = $Bone
 
 func _ready() -> void:
-	var c: Cube
+	var c: McCube
 	# Body
 	var body := bone
 	body.name = "body"

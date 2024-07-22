@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://dg6nqh6jyr4pm"]
+
+[ext_resource type="PackedScene" uid="uid://bs3h6xg0c8rbl" path="res://3d/model_node/mc_model_node.tscn" id="1_qot3r"]
+[ext_resource type="Script" path="res://3d/mc_bone/mc_bone.gd" id="2_rxgjq"]
+
+[node name="McBone" instance=ExtResource("1_qot3r")]
+script = ExtResource("2_rxgjq")

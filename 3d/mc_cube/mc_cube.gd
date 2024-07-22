@@ -1,9 +1,8 @@
-extends Node3D
+extends ModelNode
 
-class_name Cube
+class_name McCube
 
-@onready var mesh_instance: MeshInstance3D = $Pivot/Mesh
-@onready var pivot: Node3D = $Pivot
+@onready var mesh_instance: MeshInstance3D = $Pivot/CounterPivot/Mesh
 
 const faces: Array[int] = [
 	3, 2, 1, 3, 1, 0,  # Front: 3,2,1,0
@@ -21,36 +20,14 @@ const faces: Array[int] = [
 	get:
 		return mc_size
 
-@export var mc_rotation: Vector3 = Vector3.ZERO:
-	set(value):
-		mc_rotation = value
-		if pivot == null:
-			return
-		pivot.rotation = value * PI/180 * Convertions.MC_GD_ROT
-	get:
-		return mc_rotation
-
 @export var mc_origin: Vector3 = Vector3.ZERO:
 	set(value):
 		mc_origin = value
 		if mesh_instance == null:
 			return
-		mesh_instance.position = (
-			-pivot.position + mc_origin) * Convertions.MC_GD_LOC
+		mesh_instance.position = mc_origin * Convertions.MC_GD_LOC
 	get:
 		return mc_origin
-
-@export var mc_pivot: Vector3 = Vector3.ZERO:
-	set(value):
-		mc_pivot = value
-		if pivot == null:
-			return
-		pivot.position = value * Convertions.MC_GD_LOC
-		mesh_instance.position = (
-			-value + mc_origin) * Convertions.MC_GD_LOC
-	get:
-		return mc_pivot
-
 
 func redraw_mesh() -> void:
 	var st := SurfaceTool.new()
@@ -76,24 +53,15 @@ func redraw_mesh() -> void:
 
 
 ## The scene that coresponds to the Cube object
-const this_scene = "res://3d/cube/cube.tscn"
+const this_scene = "res://3d/mc_cube/mc_cube.tscn"
 
 ## Create the Cube object with its coresponding scene
-static func new_scene() -> Cube:
+static func new_scene() -> McCube:
 	return preload(this_scene).instantiate()
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	# This seemingly useless piece of code updates the internal properties of
-	# this node's child nodes, triggering updates via their setters. It also
-	# redraws the mesh.
+	super._ready()
 	mc_size = mc_size
-	mc_rotation = mc_rotation
 	mc_origin = mc_origin
-	mc_pivot = mc_pivot
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
