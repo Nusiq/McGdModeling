@@ -1,6 +1,4 @@
-extends Node
-## Extra functions for handling JSON
-
+## Extra functions for handling JSON.
 class_name XJSON
 
 ## Opens a file and returns a [Variant]. If reading fails returns null.

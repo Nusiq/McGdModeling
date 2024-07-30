@@ -1,5 +1,4 @@
-extends Node
-
+## Used to log messages to the console with pretty messages.
 class_name Logging
 
 ## Prints a message using push_error and using the standard error output with
