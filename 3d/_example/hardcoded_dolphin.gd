@@ -1,11 +1,11 @@
 extends Node3D
 
-@onready var bone: McBone = $Bone
+@onready var model: McModel = $McModel
 
 func _ready() -> void:
 	var c: McCube
 	# Body
-	var body := bone
+	var body := model.add_bone()
 	body.name = "body"
 	body.mc_pivot = Vector3(0.0, 0.0, -3.0)
 	c = body.add_cube()

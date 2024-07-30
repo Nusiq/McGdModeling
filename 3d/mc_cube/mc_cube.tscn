@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://n2ebk0b0yupt"]
 
-[ext_resource type="PackedScene" uid="uid://bs3h6xg0c8rbl" path="res://3d/model_node/mc_model_node.tscn" id="1_x7qwu"]
+[ext_resource type="PackedScene" uid="uid://bs3h6xg0c8rbl" path="res://3d/mc_model_node/mc_model_node.tscn" id="1_x7qwu"]
 [ext_resource type="Script" path="res://3d/mc_cube/mc_cube.gd" id="2_ixans"]
 
 [sub_resource type="PlaceholderMesh" id="PlaceholderMesh_800ol"]

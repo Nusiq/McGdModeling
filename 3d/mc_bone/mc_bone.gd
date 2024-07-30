@@ -25,3 +25,18 @@ func add_bone() -> McBone:
 	counter_pivot.add_child(bone)
 	return bone
 
+## Returns all the bones that are children of this bone.
+func get_bones() -> Array[McBone]:
+	var bones: Array[McBone] = []
+	for child in counter_pivot.get_children():
+		if child is McBone:
+			bones.append(child)
+	return bones
+
+## Returns all the cubes that are children of this bone.
+func get_cubes() -> Array[McCube]:
+	var cubes: Array[McCube] = []
+	for child in counter_pivot.get_children():
+		if child is McCube:
+			cubes.append(child)
+	return cubes
