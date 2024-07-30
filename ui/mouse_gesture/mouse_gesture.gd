@@ -12,18 +12,10 @@ var current_gesture := Gesture.NONE
 var gestrue_start_position := Vector2.ZERO
 
 
-func on_rotate(_delta_poz: Vector2) -> void:
-	push_error("Not Implemented MouseGesture.on_rotate")
-
-func on_pan(_delta_poz: Vector2) -> void:
-	push_error("Not Implemented MouseGesture.on_pan")
-
-func on_zoom(_delta_poz: Vector2) -> void:
-	push_error("Not Implemented MouseGesture.on_zoom")
-
-func on_reset_gesture() -> void:
-	push_error("Not Implemented MouseGesture.on_reset_gesture")
-
+signal rotate_gesture(delta_poz: Vector2)
+signal pan_gesture(delta_poz: Vector2)
+signal zoom_gesture(delta_poz: Vector2)
+signal reset_gesture()
 
 ## Called every frame automatically.
 ## Checks if the mouse gestures have been released and calls the event handlers
@@ -44,13 +36,13 @@ func _process(_delta: float) -> void:
 		) / size
 		match current_gesture:
 			Gesture.ROTATING:
-				on_rotate(delta_pos)
+				emit_signal("rotate_gesture", delta_pos)
 			Gesture.PANNING:
-				on_pan(delta_pos)
+				emit_signal("pan_gesture", delta_pos)
 			Gesture.ZOOMING:
-				on_zoom(delta_pos)
+				emit_signal("zoom_gesture", delta_pos)
 	else:
-		on_reset_gesture()
+		emit_signal("reset_gesture")
 
 ## Called automatically on GUI inputs.
 ## Starts the mouse gestures tracking when the proper key combination is

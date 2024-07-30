@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://byggwvgy1weio"]
 
 [ext_resource type="Script" path="res://3d/editor_viewport/editor_viewport.gd" id="1_lx2y6"]
-[ext_resource type="Script" path="res://3d/editor_viewport/mouse_gesture.gd" id="2_22egi"]
+[ext_resource type="PackedScene" uid="uid://smlmre000euv" path="res://ui/mouse_gesture/mouse_gesture.tscn" id="2_jv0st"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hea0x"]
 sky_top_color = Color(0.196078, 0.196078, 0.215686, 1)
@@ -21,17 +21,10 @@ tonemap_mode = 2
 [node name="EditorViewport" type="Node3D"]
 script = ExtResource("1_lx2y6")
 
+[node name="MouseGesture" parent="." instance=ExtResource("2_jv0st")]
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_x2yi6")
-
-[node name="MouseGesture" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_22egi")
 
 [node name="CameraTarget" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)

@@ -39,7 +39,7 @@ var gesture_pan_start := Vector3.ZERO
 #region Gesture Interface
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of rotateing the camera. 
-func on_rotate(delta_poz: Vector2) -> void:
+func _on_rotate_gesture(delta_poz: Vector2) -> void:
 	if not is_mouse_gesture:
 		gesture_rotate_start = Vector3(
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
@@ -56,7 +56,7 @@ func on_rotate(delta_poz: Vector2) -> void:
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of panning the camera. 
-func on_pan(delta_poz: Vector2) -> void:
+func _on_pan_gesture(delta_poz: Vector2) -> void:
 	if not is_mouse_gesture:
 		gesture_zoom_start = camera.position.z  # Zoom affects sensitivity
 		gesture_pan_start = camera_target.position
@@ -76,7 +76,7 @@ func on_pan(delta_poz: Vector2) -> void:
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of zooming the camera. 
-func on_zoom(delta_poz: Vector2) -> void:
+func _on_zoom_gesture(delta_poz: Vector2) -> void:
 	if not is_mouse_gesture:
 		gesture_zoom_start = camera.position.z
 		is_mouse_gesture = true
@@ -89,7 +89,7 @@ func on_zoom(delta_poz: Vector2) -> void:
 
 ## Called from the child node $MouseGesture when no mouse gesture is
 ## being performed.
-func on_reset_gesture() -> void:
+func _on_reset_gesture() -> void:
 	if is_mouse_gesture:
 		gesture_zoom_start = 0.0
 		gesture_rotate_start = Vector3.ZERO
@@ -148,6 +148,10 @@ func center_view_to_mouse(mouse_pos: Vector2) -> void:
 
 func _ready() -> void:
 	draw_axes()
+	mouse_gesture.connect("rotate_gesture", _on_rotate_gesture)
+	mouse_gesture.connect("pan_gesture", _on_pan_gesture)
+	mouse_gesture.connect("zoom_gesture", _on_zoom_gesture)
+	mouse_gesture.connect("reset_gesture", _on_reset_gesture)
 
 func _process(_delta: float) -> void:
 	pass
@@ -156,11 +160,11 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("shortcut.zoom_in_view", false, true):
 		if is_mouse_gesture:
 			return
-		on_zoom(Vector2.UP * zoom_sensitivity_scrolling)
+		_on_zoom_gesture(Vector2.UP * zoom_sensitivity_scrolling)
 	elif event.is_action_pressed("shortcut.zoom_out_view", false, true):
 		if is_mouse_gesture:
 			return
-		on_zoom(Vector2.DOWN * zoom_sensitivity_scrolling)
+		_on_zoom_gesture(Vector2.DOWN * zoom_sensitivity_scrolling)
 	elif event.is_action_pressed("shortcut.center_view_to_mouse", false, true):
 		center_view_to_mouse(
 			# Using position from mouse_gesture object and not from the event
