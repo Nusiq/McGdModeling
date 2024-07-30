@@ -64,11 +64,14 @@ func on_pan(delta_poz: Vector2) -> void:
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
 		is_mouse_gesture = true
 	
-	var rotate_basis := Basis.from_euler(gesture_rotate_start)
+	var right_left := Vector3.RIGHT.rotated(Vector3.UP, gesture_rotate_start.y)
+	var up_down := Vector3.UP.rotated(
+		Vector3.LEFT, gesture_rotate_start.x
+	).rotated(Vector3.UP, gesture_rotate_start.y)
 	camera_target.position = (
 		gesture_pan_start +
-		rotate_basis.y * delta_poz.y*gesture_zoom_start*pan_sensitivity +
-		rotate_basis.x * delta_poz.x*gesture_zoom_start*pan_sensitivity
+		up_down * delta_poz.y*gesture_zoom_start*pan_sensitivity +
+		right_left * delta_poz.x*gesture_zoom_start*pan_sensitivity
 	)
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
