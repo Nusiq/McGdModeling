@@ -25,12 +25,6 @@ layout_mode = 2
 text = "Hello World"
 
 [node name="CachedFileDialog" parent="." instance=ExtResource("2_nb5x8")]
-title = "Open a File"
-initial_position = 1
-size = Vector2i(600, 450)
-ok_button_text = "Open"
-file_mode = 0
-access = 2
 filters = PackedStringArray("*.json")
 
 [connection signal="pressed" from="CenterContainer/OpenFileButton" to="." method="_on_open_file_dialog_pressed"]
