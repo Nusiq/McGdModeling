@@ -3,6 +3,7 @@ extends ModelNode
 class_name McCube
 
 @onready var mesh_instance: MeshInstance3D = $Pivot/CounterPivot/Mesh
+@onready var mesh_collision: CollisionShape3D = $Pivot/CounterPivot/Mesh/StaticBody3D/CollisionShape3D
 
 const faces: Array[int] = [
 	3, 2, 1, 3, 1, 0,  # Front: 3,2,1,0
@@ -30,6 +31,12 @@ const faces: Array[int] = [
 		return mc_origin
 
 func redraw_mesh() -> void:
+	# Update collision
+	mesh_collision.shape.size = abs(mc_size)
+	mesh_collision.position = mc_size / 2 * Convertions.MC_GD_LOC
+	
+
+	# Update the actual mesh
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	# The set_smooth_group(-1) makes the model use flat shading when
@@ -50,7 +57,6 @@ func redraw_mesh() -> void:
 	st.generate_normals()
 	var mesh_data := st.commit()
 	mesh_instance.mesh = mesh_data
-
 
 ## The scene that coresponds to the Cube object
 const this_scene = preload("res://3d/mc_cube/mc_cube.tscn")

@@ -1,9 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://n2ebk0b0yupt"]
+[gd_scene load_steps=5 format=3 uid="uid://n2ebk0b0yupt"]
 
 [ext_resource type="PackedScene" uid="uid://bs3h6xg0c8rbl" path="res://3d/mc_model_node/mc_model_node.tscn" id="1_x7qwu"]
 [ext_resource type="Script" path="res://3d/mc_cube/mc_cube.gd" id="2_ixans"]
 
 [sub_resource type="PlaceholderMesh" id="PlaceholderMesh_800ol"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4eajk"]
+resource_local_to_scene = true
 
 [node name="McCube" instance=ExtResource("1_x7qwu")]
 script = ExtResource("2_ixans")
@@ -13,3 +16,8 @@ mc_origin = Vector3(0, 0, 0)
 [node name="Mesh" type="MeshInstance3D" parent="Pivot/CounterPivot" index="0"]
 mesh = SubResource("PlaceholderMesh_800ol")
 skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Pivot/CounterPivot/Mesh" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pivot/CounterPivot/Mesh/StaticBody3D" index="0"]
+shape = SubResource("BoxShape3D_4eajk")
