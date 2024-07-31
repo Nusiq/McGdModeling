@@ -12,6 +12,14 @@ class_name ModelNode
 ## changes how the rotation affects them.
 @onready var counter_pivot: Node3D = $Pivot/CounterPivot
 
+## Connects the references to the child nodes present in the scene. This can
+## be used when instantiating the node from the code without addint it to the
+## scene, when the references are needed to be connected.
+func connect_child_references() -> void:
+	pivot = $Pivot
+	counter_pivot = $Pivot/CounterPivot
+
+
 ## Translates directly to the rotation property of the node in Minecraft model.
 @export var mc_rotation: Vector3 = Vector3.ZERO:
 	set(value):

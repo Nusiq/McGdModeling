@@ -53,11 +53,13 @@ func redraw_mesh() -> void:
 
 
 ## The scene that coresponds to the Cube object
-const this_scene = "res://3d/mc_cube/mc_cube.tscn"
+const this_scene = preload("res://3d/mc_cube/mc_cube.tscn")
 
 ## Create the Cube object with its coresponding scene
 static func new_scene() -> McCube:
-	return preload(this_scene).instantiate()
+	var result := this_scene.instantiate()
+	result.connect_child_references()
+	return result
 
 
 # Called when the node enters the scene tree for the first time.
@@ -65,3 +67,34 @@ func _ready() -> void:
 	super._ready()
 	mc_size = mc_size
 	mc_origin = mc_origin
+
+func load_from_object(obj: Dictionary, path_so_far: Array=[]) -> WrappedError:
+	# Size (optional)
+	var size := XJSON.get_vector3_from_object(obj, "size", path_so_far)
+	if size.error:
+		Logging.warning(str(size.error.pass_()))
+	else:
+		mc_size = size.value
+	# Origin (optional)
+	var origin := XJSON.get_vector3_from_object(obj, "origin", path_so_far)
+	if origin.error:
+		Logging.warning(str(origin.error.pass_()))
+	else:
+		mc_origin = origin.value
+	# Rotation (optional, it's ok if not present)
+	if "rotation" in obj:
+		var rotation_val := XJSON.get_vector3_from_object(
+			obj, "rotation", path_so_far)
+		if rotation_val.error:
+			Logging.warning(str(rotation_val.error.pass_()))
+		else:
+			mc_rotation = rotation_val.value
+	# Pivot (optional, it's ok if not present)
+	if "pivot" in obj:
+		var pivot_val := XJSON.get_vector3_from_object(
+			obj, "pivot", path_so_far)
+		if pivot_val.error:
+			Logging.warning(str(pivot_val.error.pass_()))
+		else:
+			mc_pivot = pivot_val.value
+	return null

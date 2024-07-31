@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://3ys7yln4idtv"]
+
+[ext_resource type="Script" path="res://3d/_example/load_json_model.gd" id="1_61hqm"]
+[ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="2_70ehs"]
+[ext_resource type="PackedScene" uid="uid://brjt7p30rj5we" path="res://ui/cached_file_dialog/cached_file_dialog.tscn" id="3_ac3nv"]
+
+[node name="LoadJsonModel" type="Node3D"]
+script = ExtResource("1_61hqm")
+
+[node name="EditorViewport" parent="." instance=ExtResource("2_70ehs")]
+
+[node name="CachedFileDialog" parent="." instance=ExtResource("3_ac3nv")]
+
+[connection signal="file_selected" from="CachedFileDialog" to="." method="_on_cached_file_dialog_file_selected"]

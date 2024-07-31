@@ -31,3 +31,5 @@ error.xjson.path_does_not_exist,"Specified path does not exist in the JSON objec
 error.xjson.init_vector3_result_from_array.wrong_size,"Array must have 3 elements to initialize a 3D vector.","Tablica musi mieć 3 elementy aby zainicjować wektor 3D."
 error.xjson.vector3_from_object.wrong_type,"Key ""{key}"" is not an array.","Klucz ""{key}"" nie jest tablicą."
 error.xjson.vector3_from_array.wrong_type,"Item at index {index} is not an array.","Element o indeksie {index} nie jest tablicą."
+mc_model.load.invalid_description,"Unable to read the ""description"" property of the model.","Nie udało się odczytać właściwości ""description"" modelu."
+error.mc_model.invalid_root_type,"Invalid model format, root must be an object.","Nieprawidłowy format modelu, element najwyższego poziomu musi być obiektem."

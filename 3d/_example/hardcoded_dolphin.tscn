@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://3d/_example/hardcoded_dolphin.gd" id="1_dojpg"]
 [ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="2_dt0pv"]
-[ext_resource type="Script" path="res://3d/mc_model/md_model.gd" id="3_oid3n"]
+[ext_resource type="Script" path="res://3d/mc_model/mc_model.gd" id="3_oid3n"]
 
 [node name="HardcodedDolphin" type="Node3D"]
 script = ExtResource("1_dojpg")
