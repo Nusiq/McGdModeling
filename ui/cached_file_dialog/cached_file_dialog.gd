@@ -39,7 +39,9 @@ func save_cache(path: String, type: FileType) -> void:
 ## Loads the previously saved data from the cache into the file dialog
 ## settiings if it exists.
 func load_cache() -> bool:
-	var memory_group_cache: Dictionary = get_cache().get(memory_group)
+	# Don't annotate as Dictionary because Dictionary can't be null which
+	# would throw an error.
+	var memory_group_cache: Variant = get_cache().get(memory_group)
 	# WARNING! Don't change the way the 'format_version' is checked. Match
 	# pattern is very strict about floats and integers and 1.0 != 1 for it.
 	# when the data is loaded from JSON file all numbers are saved as float.

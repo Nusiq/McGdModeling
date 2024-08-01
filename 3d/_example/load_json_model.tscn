@@ -10,5 +10,6 @@ script = ExtResource("1_61hqm")
 [node name="EditorViewport" parent="." instance=ExtResource("2_70ehs")]
 
 [node name="CachedFileDialog" parent="." instance=ExtResource("3_ac3nv")]
+memory_group = "model"
 
 [connection signal="file_selected" from="CachedFileDialog" to="." method="_on_cached_file_dialog_file_selected"]
