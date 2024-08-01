@@ -109,13 +109,14 @@ func load_from_object(obj: Dictionary, model_index:=0) -> WrappedError:
 	for bone_i in range(bones.value.size()):
 		# Bone
 		var bone_path := bones_path + [bone_i]
-		var bone_node := McBone.new_scene()
 		var bone := XJSON.get_object_from_array(bones.value, bone_i, bone_path)
 		if bone.error:
 			Logging.warning(str(bone.error.pass_()))
 			continue
+		var bone_node := McBone.new_scene()
 		var err := bone_node.load_from_object(bone.value, bone_path)
 		if err:
+			bone_node.queue_free()
 			Logging.warning(str(err.pass_()))
 		else:
 			add_bone(bone_node)

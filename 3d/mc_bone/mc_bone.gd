@@ -103,14 +103,15 @@ func load_from_object(obj: Dictionary, path_so_far: Array=[]) -> WrappedError:
 		else:
 			for cube_i in range(cubes.value.size()):
 				var cube_path := path_so_far + ["cubes", cube_i]
-				var cube_node := McCube.new_scene()
 				var cube := XJSON.get_object_from_array(
 					cubes.value, cube_i, cube_path)
 				if cube.error:
 					Logging.warning(str(cube.error.pass_()))
 					continue
+				var cube_node := McCube.new_scene()
 				var err := cube_node.load_from_object(cube.value, cube_path)
 				if err:
+					cube_node.queue_free()
 					Logging.warning(str(err.pass_()))
 				else:
 					add_cube(cube_node)

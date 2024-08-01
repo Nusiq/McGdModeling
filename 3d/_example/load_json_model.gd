@@ -8,9 +8,11 @@ func _ready() -> void:
 
 func _on_cached_file_dialog_file_selected(path: String) -> void:
 	var mc_model := McModel.new()
-	add_child(mc_model)
 	var err := mc_model.load_from_file(path)
-	if err != null:
+	if err == null:
+		add_child(mc_model)
+	else:
+		mc_model.queue_free()
 		Logging.error(str(err))
 		return
 	file_dialog.hide()
