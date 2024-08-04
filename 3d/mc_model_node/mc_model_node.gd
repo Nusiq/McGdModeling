@@ -4,6 +4,10 @@ extends Node3D
 ## cubes and bones.
 class_name ModelNode
 
+## A refernece to the model that owns this node. This should be memory safe
+## because for Nodes, Godot uses the tree structure to manage memory.
+var owning_model: McModel = null
+
 ## Represents a pivot for applying the rotation.
 @onready var pivot: Node3D = $Pivot
 

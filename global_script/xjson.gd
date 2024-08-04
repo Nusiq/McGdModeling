@@ -32,7 +32,7 @@ func format_json_path(json_path: Array) -> String:
 	return "->".join(result_array)
 
 ## Used internally to add a path info to the error message.
-func _additional_path_info(json_path: Array) -> String:
+func json_path_info(json_path: Array) -> String:
 	if json_path.size() == 0:
 		return ""
 	var path := format_json_path(json_path)
@@ -69,13 +69,13 @@ func get_object_from_object(
 		return ObjectResult.new(
 			{}, WrappedError.new(
 				key_missing_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[key]
 	if not val is Dictionary:
 		return ObjectResult.new(
 			{}, WrappedError.new(
 				wrong_type_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return ObjectResult.new(val)
 
 ## Tries to get a value of specified type from an array using an index. Returns
@@ -94,13 +94,13 @@ func get_object_from_array(
 		return ObjectResult.new(
 			{}, WrappedError.new(
 				index_out_of_bounds_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[index]
 	if not val is Dictionary:
 		return ObjectResult.new(
 			{}, WrappedError.new(
 				wrong_type_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return ObjectResult.new(val)
 
 ## Results from functions that should return an array but can fail.
@@ -128,19 +128,19 @@ func get_array_from_object(
 	json_path: Array=[],
 	key_missing_error: String=\
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.arr_from_object.wrong_type")
+	wrong_type_error: String=tr("error.xjson.array_from_object.wrong_type")
 ) -> ArrayResult:
 	if not root.has(key):
 		return ArrayResult.new(
 			[], WrappedError.new(
 				key_missing_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[key]
 	if not val is Array:
 		return ArrayResult.new(
 			[], WrappedError.new(
 				wrong_type_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return ArrayResult.new(val)
 
 ## Tries to get a value of specified type from an array using an index. Returns
@@ -153,19 +153,19 @@ func get_array_from_array(
 	json_path: Array=[],
 	index_out_of_bounds_error: String=
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.arr_from_array.wrong_type"),
+	wrong_type_error: String=tr("error.xjson.array_from_array.wrong_type"),
 ) -> ArrayResult:
 	if index < 0 or index >= root.size():
 		return ArrayResult.new(
 			[], WrappedError.new(
 				index_out_of_bounds_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[index]
 	if not val is Array:
 		return ArrayResult.new(
 			[], WrappedError.new(
 				wrong_type_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return ArrayResult.new(val)
 
 ## Results from functions that should return a string but can fail.
@@ -199,13 +199,13 @@ func get_string_from_object(
 		return StringResult.new(
 			"", WrappedError.new(
 				key_missing_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[key]
 	if not val is String:
 		return StringResult.new(
 			"", WrappedError.new(
 				wrong_type_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return StringResult.new(val)
 
 ## Tries to get a value of specified type from an array using an index. Returns
@@ -224,13 +224,13 @@ func get_string_from_array(
 		return StringResult.new(
 			"", WrappedError.new(
 				index_out_of_bounds_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[index]
 	if not val is String:
 		return StringResult.new(
 			"", WrappedError.new(
 				wrong_type_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return StringResult.new(val)
 
 ## Results from functions that should return an integer but can fail.
@@ -264,13 +264,13 @@ func get_float_from_object(
 		return FloatResult.new(
 			0.0, WrappedError.new(
 				key_missing_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[key]
 	if not val is float and not val is int:
 		return FloatResult.new(
 			0.0, WrappedError.new(
 				wrong_type_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return FloatResult.new(val)
 
 
@@ -290,13 +290,13 @@ func get_float_from_array(
 		return FloatResult.new(
 			0.0, WrappedError.new(
 				index_out_of_bounds_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[index]
 	if not val is float and not val is int:
 		return FloatResult.new(
 			0.0, WrappedError.new(
 				wrong_type_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return FloatResult.new(float(val))
 
 ## Results from functions that should return an integer but can fail.
@@ -330,7 +330,7 @@ func get_int_from_object(
 		return IntResult.new(
 			0, WrappedError.new(
 				key_missing_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[key]
 	if val is float:
 		var val_int := int(val)
@@ -338,13 +338,13 @@ func get_int_from_object(
 			return IntResult.new(
 				0, WrappedError.new(
 					wrong_type_error.format({"key": key})
-					+ _additional_path_info(json_path)))
+					+ json_path_info(json_path)))
 		return IntResult.new(val_int)
 	if not val is int:
 		return IntResult.new(
 			0, WrappedError.new(
 				wrong_type_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return IntResult.new(val)
 
 ## Tries to get a value of specified type from an array using an index. Returns
@@ -363,7 +363,7 @@ func get_int_from_array(
 		return IntResult.new(
 			0, WrappedError.new(
 				index_out_of_bounds_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[index]
 	if val is float:
 		var val_int := int(val)
@@ -371,13 +371,13 @@ func get_int_from_array(
 			return IntResult.new(
 				0, WrappedError.new(
 					wrong_type_error.format({"index": index})
-					+ _additional_path_info(json_path)))
+					+ json_path_info(json_path)))
 		return IntResult.new(val_int)
 	if not val is int:
 		return IntResult.new(
 			0, WrappedError.new(
 				wrong_type_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return IntResult.new(val)
 
 ## Results from functions that should return a boolean but can fail.
@@ -411,13 +411,13 @@ func get_bool_from_object(
 		return BoolResult.new(
 			false, WrappedError.new(
 				key_missing_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[key]
 	if not val is bool:
 		return BoolResult.new(
 			false, WrappedError.new(
 				wrong_type_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return BoolResult.new(val)
 
 ## Tries to get a value of specified type from an array using an index. Returns
@@ -436,15 +436,89 @@ func get_bool_from_array(
 		return BoolResult.new(
 			false, WrappedError.new(
 				index_out_of_bounds_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[index]
 	if not val is bool:
 		return BoolResult.new(
 			false, WrappedError.new(
 				wrong_type_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return BoolResult.new(val)
 
+
+class Vector2Result:
+	var value: Vector2
+	var error: WrappedError
+
+	func _init(value_: Vector2, error_: WrappedError=null) -> void:
+		value = value_
+		error = error_
+	
+	func get_or_warn(default_value: Vector2=Vector2.ZERO) -> Vector2:
+		if error:
+			Logging.warning(str(error))
+			return default_value
+		return value
+
+## Alternative constructor for Vector2Result, can't be a static method because
+## using tr() in static methods is not allowed.
+func init_vector2_result_from_array(array: Array, json_path: Array) -> Vector2Result:
+	if array.size() != 2:
+		return Vector2Result.new(
+			Vector2.ZERO, WrappedError.new(
+				tr("error.xjson.init_vector2_result_from_array.wrong_size")
+				+ json_path_info(json_path)))
+	var x := XJSON.get_float_from_array(array, 0, json_path + [0])
+	if x.error:
+		return Vector2Result.new(Vector2.ZERO, x.error.pass_())
+	var y := XJSON.get_float_from_array(array, 1, json_path + [1])
+	if y.error:
+		return Vector2Result.new(Vector2.ZERO, y.error.pass_())
+	return Vector2Result.new(Vector2(x.value, y.value))
+
+func get_vector2_from_object(
+	root: Dictionary,
+	key: String,
+	json_path: Array=[],
+	key_missing_error: String=\
+		tr("error.xjson.something_from_object.key_missing"),
+	wrong_type_error: String=tr("error.xjson.array_from_object.wrong_type")
+) -> Vector2Result:
+	# Check for the key
+	if not root.has(key):
+		return Vector2Result.new(
+			Vector2.ZERO, WrappedError.new(
+				key_missing_error.format({"key": key})
+				+ json_path_info(json_path)))
+	var val: Variant = root[key]
+	if not val is Array:
+		return Vector2Result.new(
+			Vector2.ZERO, WrappedError.new(
+				wrong_type_error.format({"key": key})
+				+ json_path_info(json_path)))
+	return init_vector2_result_from_array(val, json_path)
+
+func get_vector2_from_array(
+	root: Array,
+	index: int,
+	json_path: Array=[],
+	index_out_of_bounds_error: String=
+		tr("error.xjson.something_from_array.index_out_of_bounds"),
+	wrong_type_error: String=tr("error.xjson.array_from_array.wrong_type"),
+) -> Vector2Result:
+	# Check for the index
+	if index < 0 or index >= root.size():
+		return Vector2Result.new(
+			Vector2.ZERO, WrappedError.new(
+				index_out_of_bounds_error.format({"index": index})
+				+ json_path_info(json_path)))
+	var val: Variant = root[index]
+	if not val is Array:
+		return Vector2Result.new(
+			Vector2.ZERO, WrappedError.new(
+				wrong_type_error.format({"index": index})
+				+ json_path_info(json_path)))
+	return init_vector2_result_from_array(val, json_path)
 
 class Vector3Result:
 	var value: Vector3
@@ -467,7 +541,7 @@ func init_vector3_result_from_array(array: Array, json_path: Array) -> Vector3Re
 		return Vector3Result.new(
 			Vector3.ZERO, WrappedError.new(
 				tr("error.xjson.init_vector3_result_from_array.wrong_size")
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var x := XJSON.get_float_from_array(array, 0, json_path + [0])
 	if x.error:
 		return Vector3Result.new(Vector3.ZERO, x.error.pass_())
@@ -485,20 +559,20 @@ func get_vector3_from_object(
 	json_path: Array=[],
 	key_missing_error: String=\
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.vector3_from_object.wrong_type")
+	wrong_type_error: String=tr("error.xjson.array_from_object.wrong_type")
 ) -> Vector3Result:
 	# Check for the key
 	if not root.has(key):
 		return Vector3Result.new(
 			Vector3.ZERO, WrappedError.new(
 				key_missing_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[key]
 	if not val is Array:
 		return Vector3Result.new(
 			Vector3.ZERO, WrappedError.new(
 				wrong_type_error.format({"key": key})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return init_vector3_result_from_array(val, json_path)
 
 func get_vector3_from_array(
@@ -507,21 +581,23 @@ func get_vector3_from_array(
 	json_path: Array=[],
 	index_out_of_bounds_error: String=
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.vector3_from_array.wrong_type"),
+	wrong_type_error: String=tr("error.xjson.array_from_array.wrong_type"),
 ) -> Vector3Result:
 	# Check for the index
 	if index < 0 or index >= root.size():
 		return Vector3Result.new(
 			Vector3.ZERO, WrappedError.new(
 				index_out_of_bounds_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	var val: Variant = root[index]
 	if not val is Array:
 		return Vector3Result.new(
 			Vector3.ZERO, WrappedError.new(
 				wrong_type_error.format({"index": index})
-				+ _additional_path_info(json_path)))
+				+ json_path_info(json_path)))
 	return init_vector3_result_from_array(val, json_path)
+
+
 
 ## Results from functions that should return a variant but can fail. Used for
 ## getting data from JSON using full JSON paths.
@@ -557,30 +633,30 @@ func get_variant_from_json_path(
 					return VariantResult.new(
 						null, WrappedError.new(
 							tr("error.xjson.path_does_not_exist")
-							+ _additional_path_info(json_path_until_now)))
+							+ json_path_info(json_path_until_now)))
 				if not root.has(key):
 					return VariantResult.new(
 						null, WrappedError.new(
 							tr("error.xjson.something_from_object.key_missing")
-							+ _additional_path_info(json_path_until_now)))
+							+ json_path_info(json_path_until_now)))
 				root = root[key]
 			var k when k is int:
 				if not root is Array:
 					return VariantResult.new(
 						null, WrappedError.new(
 							tr("error.xjson.path_does_not_exist")
-							+ _additional_path_info(json_path_until_now)))
+							+ json_path_info(json_path_until_now)))
 				if k < 0 or k >= root.size():
 					return VariantResult.new(
 						null, WrappedError.new(
 							tr("error.xjson.something_from_array.index_out_of_bounds")
-							+ _additional_path_info(json_path_until_now)))
+							+ json_path_info(json_path_until_now)))
 				root = root[k]
 			_:
 				return VariantResult.new(
 					null, WrappedError.new(
 						tr("error.xjson.invalid_json_path")
-						+ _additional_path_info(json_path_until_now)))
+						+ json_path_info(json_path_until_now)))
 	return VariantResult.new(root)
 
 func get_object_from_json_path(
@@ -595,7 +671,7 @@ func get_object_from_json_path(
 		return ObjectResult.new(
 			{}, WrappedError.new(
 				tr("error.xjson.object_from_json_path.wrong_type")
-				+ _additional_path_info(json_path_until_now)))
+				+ json_path_info(json_path_until_now)))
 	return ObjectResult.new(result.value)
 
 func get_array_from_json_path(
@@ -610,7 +686,7 @@ func get_array_from_json_path(
 		return ArrayResult.new(
 			[], WrappedError.new(
 				tr("error.xjson.array_from_json_path.wrong_type")
-				+ _additional_path_info(json_path_until_now)))
+				+ json_path_info(json_path_until_now)))
 	return ArrayResult.new(result.value)
 
 func get_string_from_json_path(
@@ -625,7 +701,7 @@ func get_string_from_json_path(
 		return StringResult.new(
 			"", WrappedError.new(
 				tr("error.xjson.string_from_json_path.wrong_type")
-				+ _additional_path_info(json_path_until_now)))
+				+ json_path_info(json_path_until_now)))
 	return StringResult.new(result.value)
 
 func get_float_from_json_path(
@@ -640,7 +716,7 @@ func get_float_from_json_path(
 		return FloatResult.new(
 			0.0, WrappedError.new(
 				tr("error.xjson.float_from_json_path.wrong_type")
-				+ _additional_path_info(json_path_until_now)))
+				+ json_path_info(json_path_until_now)))
 	return FloatResult.new(float(result.value))
 
 func get_int_from_json_path(
@@ -657,13 +733,13 @@ func get_int_from_json_path(
 			return IntResult.new(
 				0, WrappedError.new(
 					tr("error.xjson.int_from_json_path.wrong_type")
-					+ _additional_path_info(json_path_until_now)))
+					+ json_path_info(json_path_until_now)))
 		return IntResult.new(val_int)
 	if not result.value is int:
 		return IntResult.new(
 			0, WrappedError.new(
 				tr("error.xjson.int_from_json_path.wrong_type")
-				+ _additional_path_info(json_path_until_now)))
+				+ json_path_info(json_path_until_now)))
 	return IntResult.new(result.value)
 
 func get_bool_from_json_path(
@@ -678,7 +754,7 @@ func get_bool_from_json_path(
 		return BoolResult.new(
 			false, WrappedError.new(
 				tr("error.xjson.bool_from_json_path.wrong_type")
-				+ _additional_path_info(json_path_until_now)))
+				+ json_path_info(json_path_until_now)))
 	return BoolResult.new(result.value)
 
 func get_vector3_from_json_path(
@@ -694,5 +770,5 @@ func get_vector3_from_json_path(
 		return Vector3Result.new(
 			Vector3.ZERO, WrappedError.new(
 				tr("error.xjson.vector3_from_json_path.wrong_type")
-				+ _additional_path_info(json_path_until_now)))
+				+ json_path_info(json_path_until_now)))
 	return init_vector3_result_from_array(result.value, json_path_until_now)

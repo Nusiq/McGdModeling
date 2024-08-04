@@ -1,15 +1,36 @@
-[gd_scene load_steps=4 format=3 uid="uid://3ys7yln4idtv"]
+[gd_scene load_steps=5 format=3 uid="uid://3ys7yln4idtv"]
 
 [ext_resource type="Script" path="res://3d/_example/load_json_model.gd" id="1_61hqm"]
 [ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="2_70ehs"]
 [ext_resource type="PackedScene" uid="uid://brjt7p30rj5we" path="res://ui/cached_file_dialog/cached_file_dialog.tscn" id="3_ac3nv"]
+[ext_resource type="PackedScene" uid="uid://ds14rfyke1tml" path="res://3d/mc_model/mc_model.tscn" id="3_ewy3b"]
 
 [node name="LoadJsonModel" type="Node3D"]
 script = ExtResource("1_61hqm")
 
 [node name="EditorViewport" parent="." instance=ExtResource("2_70ehs")]
 
-[node name="CachedFileDialog" parent="." instance=ExtResource("3_ac3nv")]
+[node name="McModel" parent="." instance=ExtResource("3_ewy3b")]
+
+[node name="CachedFileDialogModel" parent="." instance=ExtResource("3_ac3nv")]
 memory_group = "model"
 
-[connection signal="file_selected" from="CachedFileDialog" to="." method="_on_cached_file_dialog_file_selected"]
+[node name="CachedFileDialogTexture" parent="." instance=ExtResource("3_ac3nv")]
+memory_group = "texture"
+
+[node name="GridContainer" type="GridContainer" parent="."]
+offset_right = 110.0
+offset_bottom = 66.0
+
+[node name="ButtonLoadModel" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Load model"
+
+[node name="ButtonLoadTexture" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Load Texture"
+
+[connection signal="file_selected" from="CachedFileDialogModel" to="." method="_on_cached_file_dialog_model_file_selected"]
+[connection signal="file_selected" from="CachedFileDialogTexture" to="." method="_on_cached_file_dialog_texture_file_selected"]
+[connection signal="pressed" from="GridContainer/ButtonLoadModel" to="." method="_on_button_load_model_pressed"]
+[connection signal="pressed" from="GridContainer/ButtonLoadTexture" to="." method="_on_button_load_texture_pressed"]

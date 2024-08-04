@@ -16,8 +16,9 @@ var mc_parent: StringOption = null
 var mc_name: String = ""
 
 ## Create the Bone object with its coresponding scene
-static func new_scene() -> McBone:
+static func new_scene(owning_model_: McModel) -> McBone:
 	var result: McBone = this_scene.instantiate()
+	result.owning_model = owning_model_
 	result.connect_child_references()
 	return result
 
@@ -29,10 +30,12 @@ func _ready() -> void:
 ## created and the passed object is added as a child.
 func add_cube(child: McCube=null) -> McCube:
 	if child == null:
-		child = McCube.new_scene()
+		child = McCube.new_scene(owning_model, self)
 	elif child.get_parent() != null:
 		child.get_parent().remove_child(child)
 	counter_pivot.add_child(child)
+	child.owning_model = owning_model
+	child.owning_bone = self
 	return child
 
 ## Adds new child bone to this bone. Returns a handle for the newly created
@@ -40,10 +43,11 @@ func add_cube(child: McCube=null) -> McCube:
 ## object is created and the passed object is added as a child.
 func add_bone(child: McBone=null) -> McBone:
 	if child == null:
-		child = McBone.new_scene()
+		child = McBone.new_scene(owning_model)
 	elif child.get_parent() != null:
 		child.get_parent().remove_child(child)
 	counter_pivot.add_child(child)
+	child.owning_model = owning_model
 	return child
 
 ## Returns all the bones that are children of this bone.
@@ -108,7 +112,7 @@ func load_from_object(obj: Dictionary, path_so_far: Array=[]) -> WrappedError:
 				if cube.error:
 					Logging.warning(str(cube.error.pass_()))
 					continue
-				var cube_node := McCube.new_scene()
+				var cube_node := McCube.new_scene(owning_model, self)
 				var err := cube_node.load_from_object(cube.value, cube_path)
 				if err:
 					cube_node.queue_free()
@@ -116,3 +120,7 @@ func load_from_object(obj: Dictionary, path_so_far: Array=[]) -> WrappedError:
 				else:
 					add_cube(cube_node)
 	return null
+
+func redraw_mesh() -> void:
+	for cube in get_cubes():
+		cube.redraw_mesh()

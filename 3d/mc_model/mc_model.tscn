@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ds14rfyke1tml"]
+
+[ext_resource type="Script" path="res://3d/mc_model/mc_model.gd" id="1_rstvo"]
+
+[node name="McModel" type="Node3D"]
+script = ExtResource("1_rstvo")

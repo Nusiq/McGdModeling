@@ -10,16 +10,18 @@ var visible_bounds_width := 1.0
 var visible_bounds_height := 1.0
 var visible_bounds_offset := Vector3(0, 0, 0)
 
+var material_provider: McMaterialProvider = null
 
 ## Adds new child bone to this model. Returns a handle for the newly created
 ## object. Optionally, a McBone object can be passed, in which case no new
 ## object is created and the passed object is added as a child.
 func add_bone(child: McBone=null) -> McBone:
 	if child == null:
-		child = McBone.new_scene()
+		child = McBone.new_scene(self)
 	elif child.get_parent() != null:
 		child.get_parent().remove_child(child)
 	add_child(child)
+	child.owning_model = self
 	return child
 
 ## Returns all of the bones that are children of this model.
@@ -59,7 +61,7 @@ func load_from_object(obj: Dictionary, model_index:=0) -> WrappedError:
 	# minecraft:geometry
 	var geo_path := ["minecraft:geometry", model_index]
 	var geo := XJSON.get_object_from_json_path(obj, geo_path)
-	if geo.error:
+	if geo.error != null:
 		return geo.error.pass_()
 	# description
 	var desc := XJSON.get_object_from_object(
@@ -113,7 +115,7 @@ func load_from_object(obj: Dictionary, model_index:=0) -> WrappedError:
 		if bone.error:
 			Logging.warning(str(bone.error.pass_()))
 			continue
-		var bone_node := McBone.new_scene()
+		var bone_node := McBone.new_scene(self)
 		var err := bone_node.load_from_object(bone.value, bone_path)
 		if err:
 			bone_node.queue_free()
@@ -151,3 +153,12 @@ func update_bone_hierarchy() -> void:
 	# nothing stops the user from doing that in the JSON.
 	for bone in all_bones:
 		bone.name = bone.mc_name
+
+## Removes all bones from this model.
+func remove_bones() -> void:
+	for bone in get_root_bones():
+		bone.free()
+
+func redraw_mesh() -> void:
+	for bone in get_all_bones():
+		bone.redraw_mesh()
