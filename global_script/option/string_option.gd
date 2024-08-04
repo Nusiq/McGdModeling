@@ -4,4 +4,4 @@ class_name StringOption
 var value: String = ""
 
 func _init(value_: String) -> void:
-    value = value_
+	value = value_

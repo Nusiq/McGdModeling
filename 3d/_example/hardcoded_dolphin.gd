@@ -69,4 +69,3 @@ func _ready() -> void:
 	c = right_fin.add_cube()
 	c.mc_origin = Vector3(-11.0, 1.0, -2.5)
 	c.mc_size = Vector3(8.0, 1.0, 4.0)
-	

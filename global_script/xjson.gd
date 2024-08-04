@@ -7,7 +7,7 @@ func read_file(path: String) -> Variant:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null: return null
 	var file_text := file.get_as_text()
-	file.close()  # GDScript would close it on its onw when out of scope.
+	file.close() # GDScript would close it on its onw when out of scope.
 	return JSON.parse_string(file_text)
 
 ## Saves the data into a file in provided path. Returns the success value.
@@ -43,11 +43,11 @@ class ObjectResult:
 	var value: Dictionary
 	var error: WrappedError
 
-	func _init(value_: Dictionary, error_: WrappedError=null) -> void:
+	func _init(value_: Dictionary, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 
-	func get_or_warn(default_value: Dictionary={}) -> Dictionary:
+	func get_or_warn(default_value: Dictionary = {}) -> Dictionary:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -60,10 +60,10 @@ class ObjectResult:
 func get_object_from_object(
 	root: Dictionary,
 	key: String,
-	json_path: Array=[],
-	key_missing_error: String=\
+	json_path: Array = [],
+	key_missing_error: String = \
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.obj_from_object.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.obj_from_object.wrong_type"),
 ) -> ObjectResult:
 	if not root.has(key):
 		return ObjectResult.new(
@@ -85,10 +85,10 @@ func get_object_from_object(
 func get_object_from_array(
 	root: Array,
 	index: int,
-	json_path: Array=[],
-	index_out_of_bounds_error: String=
+	json_path: Array = [],
+	index_out_of_bounds_error: String =
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.obj_from_array.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.obj_from_array.wrong_type"),
 ) -> ObjectResult:
 	if index < 0 or index >= root.size():
 		return ObjectResult.new(
@@ -108,11 +108,11 @@ class ArrayResult:
 	var value: Array
 	var error: WrappedError
 
-	func _init(value_: Array, error_: WrappedError=null) -> void:
+	func _init(value_: Array, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 	
-	func get_or_warn(default_value: Array=[]) -> Array:
+	func get_or_warn(default_value: Array = []) -> Array:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -125,10 +125,10 @@ class ArrayResult:
 func get_array_from_object(
 	root: Dictionary,
 	key: String,
-	json_path: Array=[],
-	key_missing_error: String=\
+	json_path: Array = [],
+	key_missing_error: String = \
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.array_from_object.wrong_type")
+	wrong_type_error: String = tr("error.xjson.array_from_object.wrong_type")
 ) -> ArrayResult:
 	if not root.has(key):
 		return ArrayResult.new(
@@ -150,10 +150,10 @@ func get_array_from_object(
 func get_array_from_array(
 	root: Array,
 	index: int,
-	json_path: Array=[],
-	index_out_of_bounds_error: String=
+	json_path: Array = [],
+	index_out_of_bounds_error: String =
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.array_from_array.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.array_from_array.wrong_type"),
 ) -> ArrayResult:
 	if index < 0 or index >= root.size():
 		return ArrayResult.new(
@@ -173,11 +173,11 @@ class StringResult:
 	var value: String
 	var error: WrappedError
 
-	func _init(value_: String, error_: WrappedError=null) -> void:
+	func _init(value_: String, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 	
-	func get_or_warn(default_value: String="") -> String:
+	func get_or_warn(default_value: String = "") -> String:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -190,10 +190,10 @@ class StringResult:
 func get_string_from_object(
 	root: Dictionary,
 	key: String,
-	json_path: Array=[],
-	key_missing_error: String=\
+	json_path: Array = [],
+	key_missing_error: String = \
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.string_from_object.wrong_type")
+	wrong_type_error: String = tr("error.xjson.string_from_object.wrong_type")
 ) -> StringResult:
 	if not root.has(key):
 		return StringResult.new(
@@ -215,10 +215,10 @@ func get_string_from_object(
 func get_string_from_array(
 	root: Array,
 	index: int,
-	json_path: Array=[],
-	index_out_of_bounds_error: String=
+	json_path: Array = [],
+	index_out_of_bounds_error: String =
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.string_from_array.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.string_from_array.wrong_type"),
 ) -> StringResult:
 	if index < 0 or index >= root.size():
 		return StringResult.new(
@@ -238,11 +238,11 @@ class FloatResult:
 	var value: float
 	var error: WrappedError
 
-	func _init(value_: float, error_: WrappedError=null) -> void:
+	func _init(value_: float, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 	
-	func get_or_warn(default_value: float=0.0) -> float:
+	func get_or_warn(default_value: float = 0.0) -> float:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -255,10 +255,10 @@ class FloatResult:
 func get_float_from_object(
 	root: Dictionary,
 	key: String,
-	json_path: Array=[],
-	key_missing_error: String=\
+	json_path: Array = [],
+	key_missing_error: String = \
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.float_from_object.wrong_type")
+	wrong_type_error: String = tr("error.xjson.float_from_object.wrong_type")
 ) -> FloatResult:
 	if not root.has(key):
 		return FloatResult.new(
@@ -281,10 +281,10 @@ func get_float_from_object(
 func get_float_from_array(
 	root: Array,
 	index: int,
-	json_path: Array=[],
-	index_out_of_bounds_error: String=
+	json_path: Array = [],
+	index_out_of_bounds_error: String =
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.float_from_array.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.float_from_array.wrong_type"),
 ) -> FloatResult:
 	if index < 0 or index >= root.size():
 		return FloatResult.new(
@@ -304,11 +304,11 @@ class IntResult:
 	var value: int
 	var error: WrappedError
 
-	func _init(value_: int, error_: WrappedError=null) -> void:
+	func _init(value_: int, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 	
-	func get_or_warn(default_value: int=0) -> int:
+	func get_or_warn(default_value: int = 0) -> int:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -321,10 +321,10 @@ class IntResult:
 func get_int_from_object(
 	root: Dictionary,
 	key: String,
-	json_path: Array=[],
-	key_missing_error: String=\
+	json_path: Array = [],
+	key_missing_error: String = \
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.int_from_object.wrong_type")
+	wrong_type_error: String = tr("error.xjson.int_from_object.wrong_type")
 ) -> IntResult:
 	if not root.has(key):
 		return IntResult.new(
@@ -354,10 +354,10 @@ func get_int_from_object(
 func get_int_from_array(
 	root: Array,
 	index: int,
-	json_path: Array=[],
-	index_out_of_bounds_error: String=
+	json_path: Array = [],
+	index_out_of_bounds_error: String =
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.int_from_array.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.int_from_array.wrong_type"),
 ) -> IntResult:
 	if index < 0 or index >= root.size():
 		return IntResult.new(
@@ -385,11 +385,11 @@ class BoolResult:
 	var value: bool
 	var error: WrappedError
 
-	func _init(value_: bool, error_: WrappedError=null) -> void:
+	func _init(value_: bool, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 	
-	func get_or_warn(default_value: bool=false) -> bool:
+	func get_or_warn(default_value: bool = false) -> bool:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -402,10 +402,10 @@ class BoolResult:
 func get_bool_from_object(
 	root: Dictionary,
 	key: String,
-	json_path: Array=[],
-	key_missing_error: String=\
+	json_path: Array = [],
+	key_missing_error: String = \
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.bool_from_object.wrong_type")
+	wrong_type_error: String = tr("error.xjson.bool_from_object.wrong_type")
 ) -> BoolResult:
 	if not root.has(key):
 		return BoolResult.new(
@@ -427,10 +427,10 @@ func get_bool_from_object(
 func get_bool_from_array(
 	root: Array,
 	index: int,
-	json_path: Array=[],
-	index_out_of_bounds_error: String=
+	json_path: Array = [],
+	index_out_of_bounds_error: String =
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.bool_from_array.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.bool_from_array.wrong_type"),
 ) -> BoolResult:
 	if index < 0 or index >= root.size():
 		return BoolResult.new(
@@ -450,11 +450,11 @@ class Vector2Result:
 	var value: Vector2
 	var error: WrappedError
 
-	func _init(value_: Vector2, error_: WrappedError=null) -> void:
+	func _init(value_: Vector2, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 	
-	func get_or_warn(default_value: Vector2=Vector2.ZERO) -> Vector2:
+	func get_or_warn(default_value: Vector2 = Vector2.ZERO) -> Vector2:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -462,7 +462,8 @@ class Vector2Result:
 
 ## Alternative constructor for Vector2Result, can't be a static method because
 ## using tr() in static methods is not allowed.
-func init_vector2_result_from_array(array: Array, json_path: Array) -> Vector2Result:
+func init_vector2_result_from_array(
+		array: Array, json_path: Array) -> Vector2Result:
 	if array.size() != 2:
 		return Vector2Result.new(
 			Vector2.ZERO, WrappedError.new(
@@ -479,10 +480,10 @@ func init_vector2_result_from_array(array: Array, json_path: Array) -> Vector2Re
 func get_vector2_from_object(
 	root: Dictionary,
 	key: String,
-	json_path: Array=[],
-	key_missing_error: String=\
+	json_path: Array = [],
+	key_missing_error: String = \
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.array_from_object.wrong_type")
+	wrong_type_error: String = tr("error.xjson.array_from_object.wrong_type")
 ) -> Vector2Result:
 	# Check for the key
 	if not root.has(key):
@@ -501,10 +502,10 @@ func get_vector2_from_object(
 func get_vector2_from_array(
 	root: Array,
 	index: int,
-	json_path: Array=[],
-	index_out_of_bounds_error: String=
+	json_path: Array = [],
+	index_out_of_bounds_error: String =
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.array_from_array.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.array_from_array.wrong_type"),
 ) -> Vector2Result:
 	# Check for the index
 	if index < 0 or index >= root.size():
@@ -524,11 +525,11 @@ class Vector3Result:
 	var value: Vector3
 	var error: WrappedError
 
-	func _init(value_: Vector3, error_: WrappedError=null) -> void:
+	func _init(value_: Vector3, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 	
-	func get_or_warn(default_value: Vector3=Vector3.ZERO) -> Vector3:
+	func get_or_warn(default_value: Vector3 = Vector3.ZERO) -> Vector3:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -536,7 +537,8 @@ class Vector3Result:
 
 ## Alternative constructor for Vector3Result, can't be a static method because
 ## using tr() in static methods is not allowed.
-func init_vector3_result_from_array(array: Array, json_path: Array) -> Vector3Result:
+func init_vector3_result_from_array(
+		array: Array, json_path: Array) -> Vector3Result:
 	if array.size() != 3:
 		return Vector3Result.new(
 			Vector3.ZERO, WrappedError.new(
@@ -556,10 +558,10 @@ func init_vector3_result_from_array(array: Array, json_path: Array) -> Vector3Re
 func get_vector3_from_object(
 	root: Dictionary,
 	key: String,
-	json_path: Array=[],
-	key_missing_error: String=\
+	json_path: Array = [],
+	key_missing_error: String = \
 		tr("error.xjson.something_from_object.key_missing"),
-	wrong_type_error: String=tr("error.xjson.array_from_object.wrong_type")
+	wrong_type_error: String = tr("error.xjson.array_from_object.wrong_type")
 ) -> Vector3Result:
 	# Check for the key
 	if not root.has(key):
@@ -578,10 +580,10 @@ func get_vector3_from_object(
 func get_vector3_from_array(
 	root: Array,
 	index: int,
-	json_path: Array=[],
-	index_out_of_bounds_error: String=
+	json_path: Array = [],
+	index_out_of_bounds_error: String =
 		tr("error.xjson.something_from_array.index_out_of_bounds"),
-	wrong_type_error: String=tr("error.xjson.array_from_array.wrong_type"),
+	wrong_type_error: String = tr("error.xjson.array_from_array.wrong_type"),
 ) -> Vector3Result:
 	# Check for the index
 	if index < 0 or index >= root.size():
@@ -598,18 +600,17 @@ func get_vector3_from_array(
 	return init_vector3_result_from_array(val, json_path)
 
 
-
 ## Results from functions that should return a variant but can fail. Used for
 ## getting data from JSON using full JSON paths.
 class VariantResult:
 	var value: Variant
 	var error: WrappedError
 
-	func _init(value_: Variant, error_: WrappedError=null) -> void:
+	func _init(value_: Variant, error_: WrappedError = null) -> void:
 		value = value_
 		error = error_
 
-	func get_or_warn(default_value: Variant=null) -> Variant:
+	func get_or_warn(default_value: Variant = null) -> Variant:
 		if error:
 			Logging.warning(str(error))
 			return default_value
@@ -618,7 +619,7 @@ class VariantResult:
 func get_variant_from_json_path(
 	root: Variant,
 	json_path: Array,
-	json_path_until_now: Array=[],
+	json_path_until_now: Array = [],
 ) -> VariantResult:
 	if json_path.size() == 0:
 		return root
@@ -662,9 +663,10 @@ func get_variant_from_json_path(
 func get_object_from_json_path(
 	root: Variant,
 	json_path: Array,
-	json_path_until_now: Array=[],
+	json_path_until_now: Array = [],
 ) -> ObjectResult:
-	var result := get_variant_from_json_path(root, json_path, json_path_until_now)
+	var result := get_variant_from_json_path(
+			root, json_path, json_path_until_now)
 	if result.error:
 		return ObjectResult.new({}, result.error.pass_())
 	if not result.value is Dictionary:
@@ -677,9 +679,10 @@ func get_object_from_json_path(
 func get_array_from_json_path(
 	root: Variant,
 	json_path: Array,
-	json_path_until_now: Array=[],
+	json_path_until_now: Array = [],
 ) -> ArrayResult:
-	var result := get_variant_from_json_path(root, json_path, json_path_until_now)
+	var result := get_variant_from_json_path(
+		root, json_path, json_path_until_now)
 	if result.error:
 		return ArrayResult.new([], result.error.pass_())
 	if not result.value is Array:
@@ -692,9 +695,10 @@ func get_array_from_json_path(
 func get_string_from_json_path(
 	root: Variant,
 	json_path: Array,
-	json_path_until_now: Array=[],
+	json_path_until_now: Array = [],
 ) -> StringResult:
-	var result := get_variant_from_json_path(root, json_path, json_path_until_now)
+	var result := get_variant_from_json_path(
+		root, json_path, json_path_until_now)
 	if result.error:
 		return StringResult.new("", result.error.pass_())
 	if not result.value is String:
@@ -707,9 +711,10 @@ func get_string_from_json_path(
 func get_float_from_json_path(
 	root: Variant,
 	json_path: Array,
-	json_path_until_now: Array=[],
+	json_path_until_now: Array = [],
 ) -> FloatResult:
-	var result := get_variant_from_json_path(root, json_path, json_path_until_now)
+	var result := get_variant_from_json_path(
+		root, json_path, json_path_until_now)
 	if result.error:
 		return FloatResult.new(0.0, result.error.pass_())
 	if not result.value is float and not result.value is int:
@@ -722,9 +727,10 @@ func get_float_from_json_path(
 func get_int_from_json_path(
 	root: Variant,
 	json_path: Array,
-	json_path_until_now: Array=[],
+	json_path_until_now: Array = [],
 ) -> IntResult:
-	var result := get_variant_from_json_path(root, json_path, json_path_until_now)
+	var result := get_variant_from_json_path(
+		root, json_path, json_path_until_now)
 	if result.error:
 		return IntResult.new(0, result.error.pass_())
 	if result.value is float:
@@ -745,7 +751,7 @@ func get_int_from_json_path(
 func get_bool_from_json_path(
 	root: Variant,
 	json_path: Array,
-	json_path_until_now: Array=[],
+	json_path_until_now: Array = [],
 ) -> BoolResult:
 	var result := get_variant_from_json_path(root, json_path, json_path_until_now)
 	if result.error:
@@ -760,7 +766,7 @@ func get_bool_from_json_path(
 func get_vector3_from_json_path(
 	root: Variant,
 	json_path: Array,
-	json_path_until_now: Array=[],
+	json_path_until_now: Array = [],
 ) -> Vector3Result:
 	var result := get_variant_from_json_path(
 		root, json_path, json_path_until_now)

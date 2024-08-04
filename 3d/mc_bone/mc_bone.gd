@@ -28,7 +28,7 @@ func _ready() -> void:
 ## Adds new cube to the bone. Returns a handle for the newly created object.
 ## Optionally, a McCube object can be passed, in which case no new object is
 ## created and the passed object is added as a child.
-func add_cube(child: McCube=null) -> McCube:
+func add_cube(child: McCube = null) -> McCube:
 	if child == null:
 		child = McCube.new_scene(owning_model, self)
 	elif child.get_parent() != null:
@@ -41,7 +41,7 @@ func add_cube(child: McCube=null) -> McCube:
 ## Adds new child bone to this bone. Returns a handle for the newly created
 ## object. Optionally, a McBone object can be passed, in which case no new
 ## object is created and the passed object is added as a child.
-func add_bone(child: McBone=null) -> McBone:
+func add_bone(child: McBone = null) -> McBone:
 	if child == null:
 		child = McBone.new_scene(owning_model)
 	elif child.get_parent() != null:
@@ -69,17 +69,17 @@ func get_cubes() -> Array[McCube]:
 ## Loads the JSON object data into the bone. Optionally, the path_so_far
 ## parameter can be specified for error reporting. This property defines
 ## the path in the JSON file.
-func load_from_object(obj: Dictionary, path_so_far: Array=[]) -> WrappedError:
+func load_from_object(obj: Dictionary, path_so_far: Array = []) -> WrappedError:
 	# Name (required)
 	var name_str := XJSON.get_string_from_object(obj, "name", path_so_far)
 	if name_str.error:
 		return name_str.error.pass_()
 	# Parent (optional, but if exists must be valid)
 	mc_name = name_str.value
-	if "parent" in obj:  # If the parent property exists it must be a string.
+	if "parent" in obj: # If the parent property exists it must be a string.
 		var parent_str := XJSON.get_string_from_object(
 			obj, "parent", path_so_far)
-		if parent_str.error:  # Has parent but it's not a string!
+		if parent_str.error: # Has parent but it's not a string!
 			return parent_str.error.pass_()
 		else:
 			mc_parent = StringOption.new(parent_str.value)

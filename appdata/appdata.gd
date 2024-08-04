@@ -25,7 +25,7 @@ static var _USER_CONFIG: Variant = null
 ## Used internally for get_<file> functions
 static func _get_app_data_file(path: String) -> Dictionary:
 	var cache: Variant = XJSON.read_file(path)
-	if  cache is Dictionary:
+	if cache is Dictionary:
 		return cache
 	return {}
 

@@ -15,7 +15,7 @@ var material_provider: McMaterialProvider = null
 ## Adds new child bone to this model. Returns a handle for the newly created
 ## object. Optionally, a McBone object can be passed, in which case no new
 ## object is created and the passed object is added as a child.
-func add_bone(child: McBone=null) -> McBone:
+func add_bone(child: McBone = null) -> McBone:
 	if child == null:
 		child = McBone.new_scene(self)
 	elif child.get_parent() != null:
@@ -45,19 +45,19 @@ func get_all_bones() -> Array[McBone]:
 	return result
 
 
-func load_from_string(json: String, model_index:=0) -> WrappedError:
+func load_from_string(json: String, model_index := 0) -> WrappedError:
 	var obj: Variant = JSON.parse_string(json)
 	if not obj is Dictionary:
 		return WrappedError.new(tr("error.mc_model.invalid_root_type"))
 	return load_from_object(obj as Dictionary, model_index)
 
-func load_from_file(path: String, model_index:=0) -> WrappedError:
+func load_from_file(path: String, model_index := 0) -> WrappedError:
 	var obj: Variant = XJSON.read_file(path)
 	if not obj is Dictionary:
 		return WrappedError.new(tr("error.mc_model.invalid_root_type"))
 	return load_from_object(obj as Dictionary, model_index)
 
-func load_from_object(obj: Dictionary, model_index:=0) -> WrappedError:
+func load_from_object(obj: Dictionary, model_index := 0) -> WrappedError:
 	# minecraft:geometry
 	var geo_path := ["minecraft:geometry", model_index]
 	var geo := XJSON.get_object_from_json_path(obj, geo_path)
@@ -66,7 +66,7 @@ func load_from_object(obj: Dictionary, model_index:=0) -> WrappedError:
 	# description
 	var desc := XJSON.get_object_from_object(
 		geo.value, "description", geo_path)
-	if desc.error:  # We don't care much about it.
+	if desc.error: # We don't care much about it.
 		Logging.warning(
 			str(desc.error.wrap(tr("mc_model.load.invalid_description"))))
 	else:
@@ -76,17 +76,17 @@ func load_from_object(obj: Dictionary, model_index:=0) -> WrappedError:
 			desc.value, "identifier", desc_path).get_or_warn()
 		# Texture Width & Height
 		texture_width = XJSON.get_int_from_object(
-			desc.value, "texture_width", desc_path)\
+			desc.value, "texture_width", desc_path) \
 			.get_or_warn(texture_width)
 		texture_height = XJSON.get_int_from_object(
-			desc.value, "texture_height", desc_path)\
+			desc.value, "texture_height", desc_path) \
 			.get_or_warn(texture_height)
 		# Visible Bounds
 		visible_bounds_width = XJSON.get_float_from_object(
-			desc.value, "visible_bounds_width", desc_path)\
+			desc.value, "visible_bounds_width", desc_path) \
 			.get_or_warn(visible_bounds_width)
 		visible_bounds_height = XJSON.get_float_from_object(
-			desc.value, "visible_bounds_height", desc_path)\
+			desc.value, "visible_bounds_height", desc_path) \
 			.get_or_warn(visible_bounds_height)
 		# Visible Bounds Offset
 		var vbo := XJSON.get_array_from_object(
@@ -96,11 +96,11 @@ func load_from_object(obj: Dictionary, model_index:=0) -> WrappedError:
 		else:
 			var vbo_path := desc_path + ["visible_bounds_offset"]
 			visible_bounds_offset = Vector3(
-				XJSON.get_float_from_array(vbo.value, 0, vbo_path)\
+				XJSON.get_float_from_array(vbo.value, 0, vbo_path) \
 					.get_or_warn(visible_bounds_offset.x),
-				XJSON.get_float_from_array(vbo.value, 1, vbo_path)\
+				XJSON.get_float_from_array(vbo.value, 1, vbo_path) \
 					.get_or_warn(visible_bounds_offset.y),
-				XJSON.get_float_from_array(vbo.value, 2, vbo_path)\
+				XJSON.get_float_from_array(vbo.value, 2, vbo_path) \
 					.get_or_warn(visible_bounds_offset.z)
 			)
 	# Bones

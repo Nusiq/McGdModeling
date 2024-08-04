@@ -4,4 +4,4 @@ class_name IntOption
 var value: int = 0
 
 func _init(value_: int) -> void:
-    value = value_
+	value = value_

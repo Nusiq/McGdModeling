@@ -14,8 +14,8 @@ class_name CachedFileDialog
 
 enum FileType {
 	# DON'T CHANGE THE ENUM VALUES (for future backwards compatibility reasons)
-	FILE=0,
-	DIR=1
+	FILE = 0,
+	DIR = 1
 }
 
 ## Returns the CachedFileDialog's cache from the AppData cache. If it doesn't
@@ -47,7 +47,7 @@ func load_cache() -> bool:
 	# when the data is loaded from JSON file all numbers are saved as float.
 	# Using "when" and "==" is a workaround for more sane matching behavior.
 	match memory_group_cache:
-		{"format_version": var format, "path": var path, "type": var type}\
+		{"format_version": var format, "path": var path, "type": var type} \
 		when format == 1:
 			return load_cache_v1(path, type)
 	return false
@@ -87,4 +87,3 @@ func _on_file_selected(path: String) -> void:
 func _on_about_to_popup() -> void:
 	load_cache()
 #endregion
-

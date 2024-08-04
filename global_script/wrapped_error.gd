@@ -8,13 +8,13 @@ var cause: WrappedError = null
 var root := true
 
 func _init(error_message: String) -> void:
-    self.message = error_message
+	self.message = error_message
 
 func wrap(error_message: String) -> WrappedError:
-    var wrapped := WrappedError.new(error_message)
-    cause = wrapped
-    root = false
-    return wrapped
+	var wrapped := WrappedError.new(error_message)
+	cause = wrapped
+	root = false
+	return wrapped
 
 
 ## Returns self. Implemented for the future in case we want to add more
@@ -22,15 +22,15 @@ func wrap(error_message: String) -> WrappedError:
 ## function is to be used when we want to return an error from an inner
 ## function without adding any additional text information.
 func pass_() -> WrappedError:
-    return self
+	return self
 
 func _to_string_non_recursive() -> String:
-    var formatted_message := "\n>>> ".join(message.split("\n"))
-    if root:
-        return formatted_message
-    return "[+] %s" % [formatted_message]
+	var formatted_message := "\n>>> ".join(message.split("\n"))
+	if root:
+		return formatted_message
+	return "[+] %s" % [formatted_message]
 
 func _to_string() -> String:
-    if cause == null:
-        return _to_string_non_recursive()
-    return "%s\n%s" % [_to_string_non_recursive(), cause._to_string()]
+	if cause == null:
+		return _to_string_non_recursive()
+	return "%s\n%s" % [_to_string_non_recursive(), cause._to_string()]

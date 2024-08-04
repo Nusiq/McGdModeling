@@ -4,4 +4,4 @@ class_name FloatOption
 var value: float = 0.0
 
 func _init(value_: float) -> void:
-    value = value_
+	value = value_

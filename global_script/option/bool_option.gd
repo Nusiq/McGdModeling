@@ -4,4 +4,4 @@ class_name BoolOption
 var value: bool = false
 
 func _init(value_: bool) -> void:
-    value = value_
+	value = value_

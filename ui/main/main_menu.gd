@@ -22,4 +22,3 @@ func _on_cached_file_dialog_file_selected(path: String) -> void:
 	print(XJSON.read_file(path))
 
 #endregion
-

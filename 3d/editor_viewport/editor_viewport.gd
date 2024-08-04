@@ -45,20 +45,21 @@ func _on_rotate_gesture(delta_poz: Vector2) -> void:
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
 		is_mouse_gesture = true
 	camera_pitch.rotation.x = fposmod(
-		gesture_rotate_start.x- delta_poz.y*rotation_sensitivity, TAU)
+		gesture_rotate_start.x - delta_poz.y * rotation_sensitivity, TAU)
 	# Reverse yaw if upside down
 	var r := (
 		1
-		if gesture_rotate_start.x > 3.0/2.0*PI || gesture_rotate_start.x < PI/2
+		if gesture_rotate_start.x > 3.0 / 2.0 * PI
+		|| gesture_rotate_start.x < PI / 2
 		else -1)
 	camera_yaw.rotation.y = fposmod(
-		gesture_rotate_start.y-r*delta_poz.x*rotation_sensitivity, TAU)
+		gesture_rotate_start.y - r * delta_poz.x * rotation_sensitivity, TAU)
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of panning the camera. 
 func _on_pan_gesture(delta_poz: Vector2) -> void:
 	if not is_mouse_gesture:
-		gesture_zoom_start = camera.position.z  # Zoom affects sensitivity
+		gesture_zoom_start = camera.position.z # Zoom affects sensitivity
 		gesture_pan_start = camera_target.position
 		gesture_rotate_start = Vector3(
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
@@ -70,8 +71,8 @@ func _on_pan_gesture(delta_poz: Vector2) -> void:
 	).rotated(Vector3.UP, gesture_rotate_start.y)
 	camera_target.position = (
 		gesture_pan_start +
-		up_down * delta_poz.y*gesture_zoom_start*pan_sensitivity +
-		right_left * delta_poz.x*gesture_zoom_start*pan_sensitivity
+		up_down * delta_poz.y * gesture_zoom_start * pan_sensitivity +
+		right_left * delta_poz.x * gesture_zoom_start * pan_sensitivity
 	)
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
@@ -81,7 +82,8 @@ func _on_zoom_gesture(delta_poz: Vector2) -> void:
 		gesture_zoom_start = camera.position.z
 		is_mouse_gesture = true
 	camera.position.z = (
-		gesture_zoom_start + gesture_zoom_start*delta_poz.y*zoom_sensitivity)
+		gesture_zoom_start
+		+ gesture_zoom_start * delta_poz.y * zoom_sensitivity)
 	if camera.position.z < min_view_distance:
 		camera.position.z = min_view_distance
 	elif camera.position.z > max_view_distance:
@@ -116,7 +118,7 @@ func draw_axes() -> void:
 	mesh.surface_add_vertex(Vector3(0, 1, 0) * size)
 
 	# Z axis (blue)
-	mesh.surface_set_color(Color.BLUE) 
+	mesh.surface_set_color(Color.BLUE)
 	mesh.surface_add_vertex(Vector3.ZERO)
 	mesh.surface_add_vertex(Vector3(0, 0, 1) * size)
 	mesh.surface_end()

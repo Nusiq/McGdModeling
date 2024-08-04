@@ -60,4 +60,3 @@ func _gui_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("gesture.zoom_view", false, true):
 		current_gesture = Gesture.ZOOMING
 		gestrue_start_position = get_global_mouse_position()
-

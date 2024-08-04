@@ -40,7 +40,7 @@ func del_material(key: String) -> void:
 ## internal dictionary.
 func add_material_from_texture_file(
 		key: String, path: String,
-		type: MaterialType=MaterialType.ENTITY_ALPHATEST) -> WrappedError:
+		type: MaterialType = MaterialType.ENTITY_ALPHATEST) -> WrappedError:
 	var image := Image.load_from_file(path)
 	if image == null or image.is_empty():
 		return WrappedError.new(
@@ -60,7 +60,7 @@ func add_material_from_texture_file(
 		MaterialType.ENTITY:
 			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
 		MaterialType.ENTITY_ALPHABLEND:
-			material.transparency =\
+			material.transparency = \
 				BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
 		_:
 			assert(false, "Unknown material type.")

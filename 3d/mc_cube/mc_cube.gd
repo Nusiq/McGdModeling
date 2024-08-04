@@ -14,12 +14,12 @@ class_name McCube
 # 6 - back/left/top
 # 7 - back/right/top
 const faces: Array[int] = [
-	3, 2, 1, 3, 1, 0,  # Front: 3,2,1,0
-	0, 4, 7, 0, 7, 3,  # Right: 0,4,7,3
-	4, 5, 6, 4, 6, 7,  # Back: 4,5,6,7
-	2, 6, 5, 2, 5, 1,  # Left: 2,6,5,1
-	2, 3, 7, 2, 7, 6,  # Top: 2,3,7,6
-	1, 5, 4, 1, 4, 0]  # Bottom: 1,5,4,0
+	3, 2, 1, 3, 1, 0, # Front: 3,2,1,0
+	0, 4, 7, 0, 7, 3, # Right: 0,4,7,3
+	4, 5, 6, 4, 6, 7, # Back: 4,5,6,7
+	2, 6, 5, 2, 5, 1, # Left: 2,6,5,1
+	2, 3, 7, 2, 7, 6, # Top: 2,3,7,6
+	1, 5, 4, 1, 4, 0] # Bottom: 1,5,4,0
 
 @export var mc_size: Vector3 = Vector3.ONE:
 	set(value):
@@ -95,7 +95,7 @@ func redraw_mesh() -> void:
 				assert(
 					owning_bone != null,
 					"Invalid state - cube belongs to a model but doesn't "
-					+"belong to a bone.")
+					+ "belong to a bone.")
 				set_material = func(material_instance: StringOption) -> void:
 					st.set_material(
 						owning_model.material_provider.query_material(
@@ -107,90 +107,114 @@ func redraw_mesh() -> void:
 					match axis:
 						0:
 							uv_coords = mc_uv.get_front_right_down_uv_1(mc_size)
-							set_material.call(mc_uv.get_front_material_instance())
+							set_material.call(
+								mc_uv.get_front_material_instance())
 						1:
 							uv_coords = mc_uv.get_front_right_down_uv_2(mc_size)
-							set_material.call(mc_uv.get_right_material_instance())
+							set_material.call(
+								mc_uv.get_right_material_instance())
 						2:
 							uv_coords = mc_uv.get_front_right_down_uv_3(mc_size)
-							set_material.call(mc_uv.get_down_material_instance())
+							set_material.call(
+								mc_uv.get_down_material_instance())
 				1:
 					match axis:
 						0:
 							uv_coords = mc_uv.get_front_left_down_uv_1(mc_size)
-							set_material.call(mc_uv.get_front_material_instance())
+							set_material.call(
+								mc_uv.get_front_material_instance())
 						1:
 							uv_coords = mc_uv.get_front_left_down_uv_2(mc_size)
-							set_material.call(mc_uv.get_left_material_instance())
+							set_material.call(
+								mc_uv.get_left_material_instance())
 						2:
 							uv_coords = mc_uv.get_front_left_down_uv_3(mc_size)
-							set_material.call(mc_uv.get_down_material_instance())
+							set_material.call(
+								mc_uv.get_down_material_instance())
 				2:
 					match axis:
 						0:
 							uv_coords = mc_uv.get_front_left_up_uv_1(mc_size)
-							set_material.call(mc_uv.get_front_material_instance())
+							set_material.call(
+								mc_uv.get_front_material_instance())
 						1:
 							uv_coords = mc_uv.get_front_left_up_uv_2(mc_size)
-							set_material.call(mc_uv.get_left_material_instance())
+							set_material.call(
+								mc_uv.get_left_material_instance())
 						2:
 							uv_coords = mc_uv.get_front_left_up_uv_3(mc_size)
-							set_material.call(mc_uv.get_up_material_instance())
+							set_material.call(
+								mc_uv.get_up_material_instance())
 				3:
 					match axis:
 						0:
 							uv_coords = mc_uv.get_front_right_up_uv_1(mc_size)
-							set_material.call(mc_uv.get_front_material_instance())
+							set_material.call(
+								mc_uv.get_front_material_instance())
 						1:
 							uv_coords = mc_uv.get_front_right_up_uv_2(mc_size)
-							set_material.call(mc_uv.get_right_material_instance())
+							set_material.call(
+								mc_uv.get_right_material_instance())
 						2:
 							uv_coords = mc_uv.get_front_right_up_uv_3(mc_size)
-							set_material.call(mc_uv.get_up_material_instance())
+							set_material.call(
+								mc_uv.get_up_material_instance())
 				4:
 					match axis:
 						0:
 							uv_coords = mc_uv.get_back_right_down_uv_1(mc_size)
-							set_material.call(mc_uv.get_back_material_instance())
+							set_material.call(
+								mc_uv.get_back_material_instance())
 						1:
 							uv_coords = mc_uv.get_back_right_down_uv_2(mc_size)
-							set_material.call(mc_uv.get_right_material_instance())
+							set_material.call(
+								mc_uv.get_right_material_instance())
 						2:
 							uv_coords = mc_uv.get_back_right_down_uv_3(mc_size)
-							set_material.call(mc_uv.get_down_material_instance())
+							set_material.call(
+								mc_uv.get_down_material_instance())
 				5:
 					match axis:
 						0:
 							uv_coords = mc_uv.get_back_left_down_uv_1(mc_size)
-							set_material.call(mc_uv.get_back_material_instance())
+							set_material.call(
+								mc_uv.get_back_material_instance())
 						1:
 							uv_coords = mc_uv.get_back_left_down_uv_2(mc_size)
-							set_material.call(mc_uv.get_left_material_instance())
+							set_material.call(
+								mc_uv.get_left_material_instance())
 						2:
 							uv_coords = mc_uv.get_back_left_down_uv_3(mc_size)
-							set_material.call(mc_uv.get_down_material_instance())
+							set_material.call(
+								mc_uv.get_down_material_instance())
 				6:
 					match axis:
 						0:
 							uv_coords = mc_uv.get_back_left_up_uv_1(mc_size)
-							set_material.call(mc_uv.get_back_material_instance())
+							set_material.call(
+								mc_uv.get_back_material_instance())
 						1:
 							uv_coords = mc_uv.get_back_left_up_uv_2(mc_size)
-							set_material.call(mc_uv.get_left_material_instance())
+							set_material.call(
+								mc_uv.get_left_material_instance())
 						2:
 							uv_coords = mc_uv.get_back_left_up_uv_3(mc_size)
-							set_material.call(mc_uv.get_up_material_instance())
+							set_material.call(
+								mc_uv.get_up_material_instance())
 				7:
 					match axis:
 						0:
 							uv_coords = mc_uv.get_back_right_up_uv_1(mc_size)
-							set_material.call(mc_uv.get_back_material_instance())
+							set_material.call(
+								mc_uv.get_back_material_instance())
 						1:
 							uv_coords = mc_uv.get_back_right_up_uv_2(mc_size)
-							set_material.call(mc_uv.get_right_material_instance())
+							set_material.call(
+								mc_uv.get_right_material_instance())
 						2:
 							uv_coords = mc_uv.get_back_right_up_uv_3(mc_size)
-							set_material.call(mc_uv.get_up_material_instance())
+							set_material.call(
+								mc_uv.get_up_material_instance())
 				_:
 					assert(false, "Invalid state - face index out of bounds.")
 			st.set_uv(
@@ -221,7 +245,7 @@ func _ready() -> void:
 	mc_size = mc_size
 	mc_origin = mc_origin
 
-func load_from_object(obj: Dictionary, path_so_far: Array=[]) -> WrappedError:
+func load_from_object(obj: Dictionary, path_so_far: Array = []) -> WrappedError:
 	# Size (optional)
 	var size := XJSON.get_vector3_from_object(obj, "size", path_so_far)
 	if size.error:
