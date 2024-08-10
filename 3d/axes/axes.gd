@@ -11,18 +11,21 @@ class_name Axes
 	get:
 		return line_x.visible
 	set(value):
+		if not is_node_ready(): await ready
 		line_x.visible = value
 
 @export var line_y_visible: bool = true:
 	get:
 		return line_y.visible
 	set(value):
+		if not is_node_ready(): await ready
 		line_y.visible = value
 
 @export var line_z_visible: bool = true:
 	get:
 		return line_z.visible
 	set(value):
+		if not is_node_ready(): await ready
 		line_z.visible = value
 
 ## The thickness of the axes.
@@ -31,6 +34,7 @@ class_name Axes
 		return thickness
 	set(value):
 		thickness = value
+		if not is_node_ready(): await ready
 		line_x.thickness = value
 		line_y.thickness = value
 		line_z.thickness = value
@@ -41,6 +45,7 @@ class_name Axes
 		return length
 	set(value):
 		length = value
+		if not is_node_ready(): await ready
 		line_x.length = value
 		line_y.length = value
 		line_z.length = value
@@ -54,6 +59,8 @@ const LENGTH_WHEN_INFINITE: float = 10000.0
 	get:
 		return is_infinite
 	set(value):
+		is_infinite = value
+		if not is_node_ready(): await ready
 		if value: # Set true
 			for line: Line in [line_x, line_y, line_z]:
 				line.length = LENGTH_WHEN_INFINITE
@@ -64,7 +71,6 @@ const LENGTH_WHEN_INFINITE: float = 10000.0
 				line.length = length
 				line.double_sided = false
 				line.fixed_size = false
-		is_infinite = value
 		update_axes_positions()
 
 ## The editor viewport to track the camera target transform. The tracking is

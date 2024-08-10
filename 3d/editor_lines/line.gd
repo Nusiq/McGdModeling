@@ -14,6 +14,7 @@ class_name Line
 		return double_sided
 	set(value):
 		double_sided = value
+		if not is_node_ready(): await ready
 		redraw()
 
 ## Whether the line should have a fixed size in the screen. If fixed_size is
@@ -33,6 +34,7 @@ class_name Line
 		return length
 	set(value):
 		length = value
+		if not is_node_ready(): await ready
 		redraw()
 
 ## The thickness of the line. If thickness is 0.0, the line will be drawn as a
@@ -43,6 +45,7 @@ class_name Line
 		return thickness
 	set(value):
 		thickness = value
+		if not is_node_ready(): await ready
 		redraw()
 
 ## The color of the line.
