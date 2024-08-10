@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://c75gt0qjodun5"]
+[gd_scene load_steps=6 format=3 uid="uid://c75gt0qjodun5"]
 
 [ext_resource type="Script" path="res://ui/main/main_menu.gd" id="1_8wp5i"]
 [ext_resource type="PackedScene" uid="uid://brjt7p30rj5we" path="res://ui/cached_file_dialog/cached_file_dialog.tscn" id="2_nb5x8"]
 [ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="2_u2tc1"]
 [ext_resource type="PackedScene" uid="uid://ds14rfyke1tml" path="res://3d/mc_model/mc_model.tscn" id="3_sdhs6"]
+[ext_resource type="PackedScene" uid="uid://bgmlllyntt32m" path="res://3d/axes/axes.tscn" id="5_swvdy"]
 
 [node name="MainMenu" type="Node3D"]
 script = ExtResource("1_8wp5i")
@@ -29,6 +30,9 @@ text = "Load model"
 [node name="ButtonLoadTexture" type="Button" parent="GridContainer"]
 layout_mode = 2
 text = "Load Texture"
+
+[node name="Axes" parent="." instance=ExtResource("5_swvdy")]
+length = 20.0
 
 [connection signal="file_selected" from="CachedFileDialogModel" to="." method="_on_cached_file_dialog_model_file_selected"]
 [connection signal="file_selected" from="CachedFileDialogTexture" to="." method="_on_cached_file_dialog_texture_file_selected"]
