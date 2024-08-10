@@ -36,6 +36,24 @@ var gesture_pan_start := Vector3.ZERO
 	"editor_viewport.max_view_distance", 1000, 100, 10_000.0)
 #endregion
 
+
+## Emitted when the camera global transform changes. Useful for tracking the
+## camera position to handle the 3D gui element changes.
+signal camera_transform_changed(global_camera_transform: Transform3D)
+@onready var _prev_global_camera_transform: Transform3D = get_global_camera_transform()
+
+## Emitted when the camera target global transform changes. Useful for tracking
+## the camera target position to handle the 3D gui element changes.
+signal camera_target_transform_changed(global_camera_transform: Transform3D)
+@onready var _prev_global_camera_target_transform: Transform3D = \
+	get_global_camera_target_transform()
+
+func get_global_camera_transform() -> Transform3D:
+	return camera.global_transform
+
+func get_global_camera_target_transform() -> Transform3D:
+	return camera_target.global_transform
+
 #region Gesture Interface
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of rotateing the camera. 
@@ -99,41 +117,6 @@ func _on_reset_gesture() -> void:
 		is_mouse_gesture = false
 #endregion
 
-#region Setup Functions
-func draw_axes() -> void:
-	var mesh: ImmediateMesh = ImmediateMesh.new()
-	const size = 20
-
-	mesh.clear_surfaces()
-	mesh.surface_begin(Mesh.PRIMITIVE_LINES)
-
-	# X axis (red)
-	mesh.surface_set_color(Color.RED)
-	mesh.surface_add_vertex(Vector3.ZERO)
-	mesh.surface_add_vertex(Vector3(-1, 0, 0) * size)
-
-	# Y axis (green) 
-	mesh.surface_set_color(Color.GREEN)
-	mesh.surface_add_vertex(Vector3.ZERO)
-	mesh.surface_add_vertex(Vector3(0, 1, 0) * size)
-
-	# Z axis (blue)
-	mesh.surface_set_color(Color.BLUE)
-	mesh.surface_add_vertex(Vector3.ZERO)
-	mesh.surface_add_vertex(Vector3(0, 0, 1) * size)
-	mesh.surface_end()
-
-	var material := StandardMaterial3D.new()
-	material.vertex_color_use_as_albedo = true
-
-	var mesh_instance := MeshInstance3D.new()
-	mesh_instance.mesh = mesh
-	mesh_instance.set_surface_override_material(0, material)
-
-	add_child(mesh_instance)
-
-#endregion
-
 ## Moves the camera target to the location clicked by the user.
 func center_view_to_mouse(mouse_pos: Vector2) -> void:
 	var ray_length := 10000.0
@@ -149,14 +132,19 @@ func center_view_to_mouse(mouse_pos: Vector2) -> void:
 		Logging.info(tr("editor_viewport.center_view_to_mouse.no_target"))
 
 func _ready() -> void:
-	draw_axes()
 	mouse_gesture.connect("rotate_gesture", _on_rotate_gesture)
 	mouse_gesture.connect("pan_gesture", _on_pan_gesture)
 	mouse_gesture.connect("zoom_gesture", _on_zoom_gesture)
 	mouse_gesture.connect("reset_gesture", _on_reset_gesture)
 
 func _process(_delta: float) -> void:
-	pass
+	# Check and notify the changes in the global camera transform
+	if camera.global_transform != _prev_global_camera_transform:
+		_prev_global_camera_transform = camera.global_transform
+		camera_transform_changed.emit(camera.global_transform)
+	if camera_target.global_transform != _prev_global_camera_target_transform:
+		_prev_global_camera_target_transform = camera_target.global_transform
+		camera_target_transform_changed.emit(camera_target.global_transform)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("shortcut.zoom_in_view", false, true):

@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://bgmlllyntt32m"]
+
+[ext_resource type="Script" path="res://3d/axes/axes.gd" id="1_7gq1f"]
+[ext_resource type="PackedScene" uid="uid://b6yc6uc1wlnh4" path="res://3d/editor_lines/line.tscn" id="1_ofttr"]
+
+[node name="Axes" type="Node3D"]
+script = ExtResource("1_7gq1f")
+
+[node name="LineX" parent="." instance=ExtResource("1_ofttr")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+double_sided = false
+fixed_size = false
+length = 1.0
+thickness = 0.0
+color = Color(1, 0, 0, 1)
+
+[node name="LineY" parent="." instance=ExtResource("1_ofttr")]
+double_sided = false
+fixed_size = false
+length = 1.0
+thickness = 0.0
+color = Color(0, 1, 0, 1)
+
+[node name="LineZ" parent="." instance=ExtResource("1_ofttr")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+double_sided = false
+fixed_size = false
+length = 1.0
+thickness = 0.0
+color = Color(0, 0, 1, 1)

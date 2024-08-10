@@ -1,0 +1,74 @@
+[gd_scene load_steps=6 format=3 uid="uid://cdceghda2kt4p"]
+
+[ext_resource type="Script" path="res://3d/axes/_example/axes_viewport_interactions.gd" id="1_8172w"]
+[ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="1_juapp"]
+[ext_resource type="PackedScene" uid="uid://bgmlllyntt32m" path="res://3d/axes/axes.tscn" id="2_fie1j"]
+
+[sub_resource type="TextMesh" id="TextMesh_rsf5g"]
+text = "Node 1"
+
+[sub_resource type="TextMesh" id="TextMesh_x5yd8"]
+text = "Node 2"
+
+[node name="AxesViewportInteractions" type="Node3D"]
+script = ExtResource("1_8172w")
+
+[node name="EditorViewport" parent="." instance=ExtResource("1_juapp")]
+
+[node name="Axes" parent="." instance=ExtResource("2_fie1j")]
+
+[node name="Node1" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.861115, -0.3756, -0.342645, 0.50841, 0.636168, 0.580352, 0, -0.673954, 0.738773, -1.32391, 0, -1.71358)
+mesh = SubResource("TextMesh_rsf5g")
+
+[node name="Node2" type="MeshInstance3D" parent="Node1"]
+transform = Transform3D(-0.744465, -0.128745, 0.65513, 0.562048, 0.408786, 0.719023, -0.360379, 0.903502, -0.231967, 1.43629, -0.733677, 0.940046)
+mesh = SubResource("TextMesh_x5yd8")
+skeleton = NodePath("../..")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TargetDropdown" type="OptionButton" parent="Control/VBoxContainer"]
+layout_mode = 2
+item_count = 3
+selected = 0
+popup/item_0/text = "No Target"
+popup/item_0/id = 0
+popup/item_1/text = "Node 1"
+popup/item_1/id = 1
+popup/item_2/text = "Node 2"
+popup/item_2/id = 2
+
+[node name="XVisibleCheckbox" type="CheckBox" parent="Control/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "X Visible"
+
+[node name="YVisibleCheckbox" type="CheckBox" parent="Control/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Y Visible"
+
+[node name="ZVisibleCheckbox" type="CheckBox" parent="Control/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Z Visible"
+
+[node name="InfiniteCheckbox" type="CheckBox" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "Infinite"
+
+[connection signal="item_selected" from="Control/VBoxContainer/TargetDropdown" to="." method="_on_target_dropdown_item_selected"]
+[connection signal="toggled" from="Control/VBoxContainer/XVisibleCheckbox" to="." method="_on_x_visible_checkbox_toggled"]
+[connection signal="toggled" from="Control/VBoxContainer/YVisibleCheckbox" to="." method="_on_y_visible_checkbox_toggled"]
+[connection signal="toggled" from="Control/VBoxContainer/ZVisibleCheckbox" to="." method="_on_z_visible_checkbox_toggled"]
+[connection signal="toggled" from="Control/VBoxContainer/InfiniteCheckbox" to="." method="_on_infinite_checkbox_toggled"]
