@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://byggwvgy1weio"]
+[gd_scene load_steps=9 format=3 uid="uid://byggwvgy1weio"]
 
 [ext_resource type="Script" path="res://3d/editor_viewport/editor_viewport.gd" id="1_lx2y6"]
 [ext_resource type="PackedScene" uid="uid://smlmre000euv" path="res://ui/mouse_gesture/mouse_gesture.tscn" id="2_jv0st"]
+[ext_resource type="Shader" path="res://3d/surface_grid/surface_grid.gdshader" id="3_33jrp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hea0x"]
 sky_top_color = Color(0.196078, 0.196078, 0.215686, 1)
@@ -17,6 +18,20 @@ sky_material = SubResource("ProceduralSkyMaterial_hea0x")
 background_mode = 2
 sky = SubResource("Sky_vaoec")
 tonemap_mode = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_soxp8"]
+render_priority = 0
+shader = ExtResource("3_33jrp")
+shader_parameter/grid_size = 1.0
+shader_parameter/grid_line_width = 0.0013
+shader_parameter/subcell_row_count = 16
+shader_parameter/min_grid_precision_scale = 130.0
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/max_grid_alpha = 0.05
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_pycb4"]
+material = SubResource("ShaderMaterial_soxp8")
+size = Vector2(10, 10)
 
 [node name="EditorViewport" type="Node3D"]
 script = ExtResource("1_lx2y6")
@@ -35,6 +50,10 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 
 [node name="Camera3D" type="Camera3D" parent="CameraTarget/CameraYaw/CameraPitch"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 4.28385e-08, 0, -0.990015)
+mesh = SubResource("PlaneMesh_pycb4")
 
 [node name="KeyLight" type="DirectionalLight3D" parent="CameraTarget/CameraYaw/CameraPitch"]
 transform = Transform3D(0.707107, 0.353553, -0.612373, 0, 0.866026, 0.499999, 0.707107, -0.353553, 0.612373, 0, 0, 5)
