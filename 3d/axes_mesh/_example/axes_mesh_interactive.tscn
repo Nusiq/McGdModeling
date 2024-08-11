@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://cdceghda2kt4p"]
 
-[ext_resource type="Script" path="res://3d/axes/_example/axes_viewport_interactions.gd" id="1_8172w"]
-[ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="1_juapp"]
-[ext_resource type="PackedScene" uid="uid://bgmlllyntt32m" path="res://3d/axes/axes.tscn" id="2_fie1j"]
+[ext_resource type="Script" path="res://3d/axes_mesh/_example/axes_mesh_interactive.gd" id="1_7l25r"]
+[ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="2_vipvs"]
+[ext_resource type="PackedScene" uid="uid://bgmlllyntt32m" path="res://3d/axes_mesh/axes_mesh.tscn" id="3_12cre"]
 
 [sub_resource type="TextMesh" id="TextMesh_rsf5g"]
 text = "Node 1"
@@ -11,11 +11,11 @@ text = "Node 1"
 text = "Node 2"
 
 [node name="AxesViewportInteractions" type="Node3D"]
-script = ExtResource("1_8172w")
+script = ExtResource("1_7l25r")
 
-[node name="EditorViewport" parent="." instance=ExtResource("1_juapp")]
+[node name="EditorViewport" parent="." instance=ExtResource("2_vipvs")]
 
-[node name="Axes" parent="." instance=ExtResource("2_fie1j")]
+[node name="Axes" parent="." instance=ExtResource("3_12cre")]
 
 [node name="Node1" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.861115, -0.3756, -0.342645, 0.50841, 0.636168, 0.580352, 0, -0.673954, 0.738773, -1.32391, 0, -1.71358)

@@ -3,9 +3,9 @@ extends Node3D
 
 class_name Axes
 
-@onready var line_x: Line = $LineX
-@onready var line_y: Line = $LineY
-@onready var line_z: Line = $LineZ
+@onready var line_x: AxisLine = $LineX
+@onready var line_y: AxisLine = $LineY
+@onready var line_z: AxisLine = $LineZ
 
 @export var line_x_visible: bool = true:
 	get:
@@ -62,12 +62,12 @@ const LENGTH_WHEN_INFINITE: float = 10000.0
 		is_infinite = value
 		if not is_node_ready(): await ready
 		if value: # Set true
-			for line: Line in [line_x, line_y, line_z]:
+			for line: AxisLine in [line_x, line_y, line_z]:
 				line.length = LENGTH_WHEN_INFINITE
 				line.double_sided = true
 				line.fixed_size = true
 		else: # Set false
-			for line: Line in [line_x, line_y, line_z]:
+			for line: AxisLine in [line_x, line_y, line_z]:
 				line.length = length
 				line.double_sided = false
 				line.fixed_size = false

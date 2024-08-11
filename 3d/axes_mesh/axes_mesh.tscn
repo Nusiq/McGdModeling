@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://bgmlllyntt32m"]
 
-[ext_resource type="Script" path="res://3d/axes/axes.gd" id="1_7gq1f"]
-[ext_resource type="PackedScene" uid="uid://b6yc6uc1wlnh4" path="res://3d/editor_lines/line.tscn" id="1_ofttr"]
+[ext_resource type="Script" path="res://3d/axes_mesh/axes_mesh.gd" id="1_7gq1f"]
+[ext_resource type="PackedScene" uid="uid://b6yc6uc1wlnh4" path="res://3d/axes_mesh/axis_line.tscn" id="1_ofttr"]
 
-[node name="Axes" type="Node3D"]
+[node name="AxesMesh" type="Node3D"]
 script = ExtResource("1_7gq1f")
 
 [node name="LineX" parent="." instance=ExtResource("1_ofttr")]

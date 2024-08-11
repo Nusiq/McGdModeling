@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dhx7syupjn661"]
+
+[ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="1_8184t"]
+[ext_resource type="PackedScene" uid="uid://b6yc6uc1wlnh4" path="res://3d/axes_mesh/axis_line.tscn" id="2_t00y5"]
+
+[node name="ViewLine" type="Node3D"]
+
+[node name="EditorViewport" parent="." instance=ExtResource("1_8184t")]
+
+[node name="Line" parent="." instance=ExtResource("2_t00y5")]
+thickness = 0.0

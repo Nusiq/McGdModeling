@@ -4,7 +4,7 @@ extends Node3D
 ## Draws a simple line. The line is always drawn upwards (Y+ direction).
 ## If you want to draw it pointing in a different direction, you can rotate the
 ## node.
-class_name Line
+class_name AxisLine
 
 ## Whether the line should be drawn both ways or only in positive direction. If
 ## double_sided is true, the line will be drawn in both directions. The length
