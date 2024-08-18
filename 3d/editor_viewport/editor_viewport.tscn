@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://3d/editor_viewport/editor_viewport.gd" id="1_lx2y6"]
 [ext_resource type="PackedScene" uid="uid://smlmre000euv" path="res://ui/mouse_gesture/mouse_gesture.tscn" id="2_jv0st"]
 [ext_resource type="Shader" path="res://3d/surface_grid/surface_grid.gdshader" id="3_33jrp"]
-[ext_resource type="Shader" path="res://3d/axes/axes.gdshader" id="4_2bo6f"]
+[ext_resource type="Shader" path="res://3d/axes_shader/axes.gdshader" id="4_2bo6f"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hea0x"]
 sky_top_color = Color(0.196078, 0.196078, 0.215686, 1)
@@ -43,6 +43,8 @@ shader_parameter/albedo_y = Color(0, 1, 0, 1)
 shader_parameter/albedo_z = Color(0, 0, 1, 1)
 shader_parameter/max_line_alpha = 1.0
 shader_parameter/axis_rotation = Vector3(0, 0, 0)
+shader_parameter/axis_origin = Vector3(0, 0, 0)
+shader_parameter/axes_mask = 7
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_6oin2"]
 material = SubResource("ShaderMaterial_gh1so")

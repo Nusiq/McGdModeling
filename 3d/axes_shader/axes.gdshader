@@ -15,6 +15,9 @@ uniform float max_line_alpha: hint_range(0.0, 1.0) = 1.0;
 
 // The rotation of the axes expresses in euler angles using degrees
 uniform vec3 axis_rotation = vec3(0.0, 0.0, 0.0);
+uniform vec3 axis_origin = vec3(0, 0, 0);
+
+uniform int axes_mask: hint_range(0, 7) = 7;
 
 // Convinience structure used for return values from certain drawing functions.
 struct AlphaDepthAlbedo {
@@ -90,7 +93,7 @@ AlphaDepthAlbedo draw_line(
 	// line_closest_point
 	// If it was zero it means that lines are parallel
 	if (length(cross_slope) < 10e-4) {
-		return AlphaDepthAlbedo(0.0, 0.0, vec3(0.0));
+		return AlphaDepthAlbedo(0.0, 0.0, vec3(0.0, 0.0, 0.0));
 	}
 	// You can use the cross_slope vector to move one of the lines up/down which
 	// basically defines a plane. For example we can move the "view" line. It
@@ -119,7 +122,7 @@ AlphaDepthAlbedo draw_line(
 			abs(view_intersection_t_denominator) < 10e-7 &&
 			abs(line_intersection_t_denominator) < 10e-7
 	) {
-		return AlphaDepthAlbedo(0.0, 0.0, vec3(0.0));
+		return AlphaDepthAlbedo(0.0, 0.0, vec3(0.0, 0.0, 0.0));
 	}
 
 	float view_intersection_t =
@@ -154,7 +157,7 @@ AlphaDepthAlbedo draw_line(
 		1.0-min(line_width, pixels_distance)/line_width;
 
 	if (view_intersection_t >= 0.0) {
-		return AlphaDepthAlbedo(0.0, 0.0, vec3(0.0));
+		return AlphaDepthAlbedo(0.0, 0.0, vec3(0.0, 0.0, 0.0));
 	}
 	float alpha = pixels_distance_alpha * max_line_alpha;
 	return AlphaDepthAlbedo(alpha, depth, albedo_);
@@ -168,20 +171,33 @@ void fragment() {
 	mat3 line_matrix = rotation_matrix(radians(axis_rotation));
 	//line_matrix = rotation_matrix(0.0, TAU*0.66, 0);
 	vec3 line_slope = line_matrix * vec3(1.0, 0, 0);
-	vec3 line_origin = vec3(0, 0, 0);
-	AlphaDepthAlbedo line_1 = draw_line(
-		view_slope, view_origin, line_slope, line_origin, albedo_x,
-		PROJECTION_MATRIX, VIEW_MATRIX);
+
+	AlphaDepthAlbedo line_1;
+	if (bool(axes_mask & 1)) {
+		line_1 = draw_line(
+			view_slope, view_origin, line_slope, axis_origin, albedo_x,
+			PROJECTION_MATRIX, VIEW_MATRIX);
+	} else {
+		line_1 = AlphaDepthAlbedo(0.0, 0.0, vec3(0,0,0));
+	}
 	line_slope = line_matrix * vec3(0.0, 1.0, 0);
-	line_origin = vec3(0, 0, 0);
-	AlphaDepthAlbedo line_2 = draw_line(
-		view_slope, view_origin, line_slope, line_origin, albedo_y,
-		PROJECTION_MATRIX, VIEW_MATRIX);
+	AlphaDepthAlbedo line_2;
+	if (bool(axes_mask & 2)) {
+		line_2 = draw_line(
+			view_slope, view_origin, line_slope, axis_origin, albedo_y,
+			PROJECTION_MATRIX, VIEW_MATRIX);
+	} else {
+		line_2 = AlphaDepthAlbedo(0.0, 0.0, vec3(0,0,0));
+	}
 	line_slope = line_matrix * vec3(0.0, 0, 1.0);
-	line_origin = vec3(0, 0, 0);
-	AlphaDepthAlbedo line_3 = draw_line(
-		view_slope, view_origin, line_slope, line_origin, albedo_z,
-		PROJECTION_MATRIX, VIEW_MATRIX);
+	AlphaDepthAlbedo line_3;
+	if (bool(axes_mask & 4)) {
+		line_3 = draw_line(
+			view_slope, view_origin, line_slope, axis_origin, albedo_z,
+			PROJECTION_MATRIX, VIEW_MATRIX);
+	} else {
+		line_3 = AlphaDepthAlbedo(0.0, 0.0, vec3(0,0,0));
+	}
 	AlphaDepthAlbedo result = max_ada(max_ada(
 		line_1, line_2
 	), line_3);

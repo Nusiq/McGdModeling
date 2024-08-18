@@ -1,7 +1,7 @@
 extends Node3D
 
 
-@onready var axes: Axes = $Axes
+@onready var axes: AxesMesh = $Axes
 @onready var node1: Node3D = $Node1
 @onready var node2: Node3D = $Node1/Node2
 

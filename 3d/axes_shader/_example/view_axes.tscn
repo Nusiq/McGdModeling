@@ -1,0 +1,95 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0dh077tx2eqq"]
+
+[ext_resource type="Script" path="res://3d/axes_shader/_example/view_axes.gd" id="1_b4p6w"]
+[ext_resource type="PackedScene" uid="uid://mhc63t1fjtgg" path="res://3d/axes_shader/axes_shader.tscn" id="1_shl3w"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_nnhyf"]
+
+[node name="ViewAxes" type="Node3D"]
+script = ExtResource("1_b4p6w")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.47147, 3.65709, -4.06418, -5.46734, 1.65316, -1.83718, 0, 4.46013, 4.01338, -11.9195, -4.76837e-07, -6.1252)
+mesh = SubResource("TorusMesh_nnhyf")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.968483, 0.249079, 0, -0.249079, 0.968483, 0, 6.52505, 12.0357)
+
+[node name="Axes" parent="Camera3D" instance=ExtResource("1_shl3w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.06)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 31.5717, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 305.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="CheckBoxX" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "X"
+
+[node name="CheckBoxY" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Y"
+
+[node name="CheckBoxZ" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Z"
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Rotation"
+
+[node name="RotationSliderX" type="HSlider" parent="VBoxContainer"]
+layout_mode = 2
+min_value = -180.0
+max_value = 180.0
+
+[node name="RotationSliderY" type="HSlider" parent="VBoxContainer"]
+layout_mode = 2
+min_value = -180.0
+max_value = 180.0
+
+[node name="RotationSliderZ" type="HSlider" parent="VBoxContainer"]
+layout_mode = 2
+min_value = -180.0
+max_value = 180.0
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Origin"
+
+[node name="OriginSliderX" type="HSlider" parent="VBoxContainer"]
+layout_mode = 2
+min_value = -30.0
+max_value = 30.0
+step = 0.1
+
+[node name="OriginSliderY" type="HSlider" parent="VBoxContainer"]
+layout_mode = 2
+min_value = -30.0
+max_value = 30.0
+step = 0.1
+
+[node name="OriginSliderZ" type="HSlider" parent="VBoxContainer"]
+layout_mode = 2
+min_value = -30.0
+max_value = 30.0
+step = 0.1
+
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/CheckBoxX" to="." method="_on_check_box_x_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/CheckBoxY" to="." method="_on_check_box_y_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/CheckBoxZ" to="." method="_on_check_box_z_toggled"]
+[connection signal="value_changed" from="VBoxContainer/RotationSliderX" to="." method="_on_rotation_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/RotationSliderY" to="." method="_on_rotation_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/RotationSliderZ" to="." method="_on_rotation_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/OriginSliderX" to="." method="_on_origin_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/OriginSliderY" to="." method="_on_origin_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/OriginSliderZ" to="." method="_on_origin_slider_value_changed"]

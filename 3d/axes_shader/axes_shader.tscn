@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://mhc63t1fjtgg"]
+
+[ext_resource type="Shader" path="res://3d/axes_shader/axes.gdshader" id="1_1tejb"]
+[ext_resource type="Script" path="res://3d/axes_shader/axes_shader.gd" id="2_g30qs"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d3fhd"]
+render_priority = 0
+shader = ExtResource("1_1tejb")
+shader_parameter/line_width = 0.004
+shader_parameter/albedo_x = Color(1, 0, 0, 1)
+shader_parameter/albedo_y = Color(0, 1, 0, 1)
+shader_parameter/albedo_z = Color(0, 0, 1, 1)
+shader_parameter/max_line_alpha = 1.0
+shader_parameter/axis_rotation = Vector3(0, 0, 0)
+shader_parameter/axis_origin = Vector3(0, 0, 0)
+shader_parameter/axes_mask = 7
+
+[sub_resource type="QuadMesh" id="QuadMesh_t1ufe"]
+material = SubResource("ShaderMaterial_d3fhd")
+
+[node name="Axes" type="MeshInstance3D"]
+mesh = SubResource("QuadMesh_t1ufe")
+script = ExtResource("2_g30qs")

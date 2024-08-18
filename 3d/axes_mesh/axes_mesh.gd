@@ -1,7 +1,7 @@
 @tool
 extends Node3D
 
-class_name Axes
+class_name AxesMesh
 
 @onready var line_x: AxisLine = $LineX
 @onready var line_y: AxisLine = $LineY
