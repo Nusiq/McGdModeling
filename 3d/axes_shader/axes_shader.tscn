@@ -18,6 +18,6 @@ shader_parameter/axes_mask = 7
 [sub_resource type="QuadMesh" id="QuadMesh_t1ufe"]
 material = SubResource("ShaderMaterial_d3fhd")
 
-[node name="Axes" type="MeshInstance3D"]
+[node name="AxesShader" type="MeshInstance3D"]
 mesh = SubResource("QuadMesh_t1ufe")
 script = ExtResource("2_g30qs")
