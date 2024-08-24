@@ -5,6 +5,7 @@
 [ext_resource type="Shader" path="res://3d/selection_outline/selection_outline_canvas.gdshader" id="2_x5e6e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mlr58"]
+resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("1_usubr")
 
@@ -12,6 +13,7 @@ shader = ExtResource("1_usubr")
 material = SubResource("ShaderMaterial_mlr58")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5aqnp"]
+resource_local_to_scene = true
 shader = ExtResource("2_x5e6e")
 shader_parameter/outlineColor = Color(1, 0.627, 0.157, 1)
 
