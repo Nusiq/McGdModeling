@@ -5,7 +5,7 @@ shader_type spatial;
 render_mode blend_mix,depth_draw_opaque, unshaded;
 
 // Width of the grid lines
-uniform float line_width: hint_range(0.001, 10.0) = 0.004;
+uniform float line_width: hint_range(0.01, 5.0) = 0.2;
 // The color of the material
 uniform vec3 albedo_x: source_color = vec3(1.0, 0.0, 0.0);
 uniform vec3 albedo_y: source_color = vec3(0.0, 1.0, 0.0);
@@ -153,8 +153,11 @@ AlphaDepthAlbedo draw_line(
 		line_closest_point_projection.xy / line_closest_point_projection.w,
 		view_closest_point_projection.xy / view_closest_point_projection.w
 	);
+	// We operate with really small numbers. Scaling down for more convinient
+	// input in 'uniform'
+	float line_width_scaled = line_width / 100.0;
 	float pixels_distance_alpha =  // Interpolate towards the center
-		1.0-min(line_width, pixels_distance)/line_width;
+		1.0-min(line_width_scaled, pixels_distance)/line_width_scaled;
 
 	if (view_intersection_t >= 0.0) {
 		return AlphaDepthAlbedo(0.0, 0.0, vec3(0.0, 0.0, 0.0));

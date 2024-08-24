@@ -2,6 +2,7 @@
 // with the red color channel to create an image to overlay on top of the main
 // vieweport to display the outlines. Applies slight blur to the outline.
 shader_type canvas_item;
+render_mode unshaded;
 
 uniform vec3 outlineColor: source_color = vec3(1.0, 1.0, 1.0);
 
@@ -12,10 +13,10 @@ uniform vec3 outlineColor: source_color = vec3(1.0, 1.0, 1.0);
 // How many iterations to do to expand the outline:
 const int outlineExpansionSteps = 3;
 // How much to expand the outline each iteration:
-const float outlineExpansionStepMultiplier = 0.8;
+const float outlineExpansionStepMultiplier = 0.5;
 // How much to reduce the intensity of the outline based on distance from the
 // original pixel:
-const float distancePenaltyIntensity = 0.7;
+const float distancePenaltyIntensity = 1.5;
 
 void fragment() {
 	float maxAlpha = 0.0;

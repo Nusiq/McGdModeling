@@ -9,7 +9,7 @@ uniform sampler2D SCREEN_TEXTURE: hint_screen_texture, repeat_disable;
 
 // How many pixels from center to check for the outline (extra
 // width of the outline):
-const int lineWidth = 1;
+const int lineWidth = 2;
 
 void fragment() {
 	vec4 textureHere = texture(SCREEN_TEXTURE, SCREEN_UV);

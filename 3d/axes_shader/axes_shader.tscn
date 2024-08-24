@@ -6,7 +6,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d3fhd"]
 render_priority = 0
 shader = ExtResource("1_1tejb")
-shader_parameter/line_width = 0.004
+shader_parameter/line_width = 0.2
 shader_parameter/albedo_x = Color(1, 0, 0, 1)
 shader_parameter/albedo_y = Color(0, 1, 0, 1)
 shader_parameter/albedo_z = Color(0, 0, 1, 1)
