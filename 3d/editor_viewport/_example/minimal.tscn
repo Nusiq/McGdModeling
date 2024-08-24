@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dj380lushy8y4"]
+[gd_scene load_steps=6 format=3 uid="uid://dj380lushy8y4"]
 
 [ext_resource type="PackedScene" uid="uid://byggwvgy1weio" path="res://3d/editor_viewport/editor_viewport.tscn" id="1_7kif7"]
+[ext_resource type="Script" path="res://3d/editor_viewport/_example/minimal.gd" id="1_y5ibh"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qevkv"]
 albedo_color = Color(0.66, 0.1386, 0.16467, 1)
@@ -11,6 +12,7 @@ material = SubResource("StandardMaterial3D_qevkv")
 [sub_resource type="BoxShape3D" id="BoxShape3D_onycq"]
 
 [node name="Minimal" type="Node3D"]
+script = ExtResource("1_y5ibh")
 
 [node name="EditorViewport" parent="." instance=ExtResource("1_7kif7")]
 
@@ -21,3 +23,19 @@ mesh = SubResource("BoxMesh_tyvqc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
 shape = SubResource("BoxShape3D_onycq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer"]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "No Selection"
+popup/item_1/text = "Object Selected"
+popup/item_1/id = 1
+popup/item_2/text = "Object Active"
+popup/item_2/id = 2
+
+[connection signal="item_selected" from="VBoxContainer/OptionButton" to="." method="_on_option_button_item_selected"]

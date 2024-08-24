@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://byggwvgy1weio"]
+[gd_scene load_steps=9 format=3 uid="uid://byggwvgy1weio"]
 
 [ext_resource type="Script" path="res://3d/editor_viewport/editor_viewport.gd" id="1_lx2y6"]
 [ext_resource type="PackedScene" uid="uid://smlmre000euv" path="res://ui/mouse_gesture/mouse_gesture.tscn" id="2_jv0st"]
 [ext_resource type="PackedScene" uid="uid://d2jiujm8jibch" path="res://3d/surface_grid_shader/surface_grid_shader.tscn" id="3_dhc55"]
 [ext_resource type="PackedScene" uid="uid://mhc63t1fjtgg" path="res://3d/axes_shader/axes_shader.tscn" id="4_nita6"]
+[ext_resource type="PackedScene" uid="uid://dcr26yxltr5s" path="res://3d/selection_outline/selection_outline.tscn" id="5_mmfi7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hea0x"]
 sky_top_color = Color(0.196078, 0.196078, 0.215686, 1)
@@ -37,12 +38,20 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 
 [node name="Camera3D" type="Camera3D" parent="CameraTarget/CameraYaw/CameraPitch"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+cull_mask = 1
 
 [node name="SurfaceGridShader" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("3_dhc55")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
 
 [node name="AxesShader" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("4_nita6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+
+[node name="SelectionOutline" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("5_mmfi7")]
+outline_color = Color(0.929412, 0.341176, 0, 1)
+
+[node name="ActiveOutline" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("5_mmfi7")]
+outline_color = Color(1, 0.627451, 0.156863, 1)
+outline_layers = 4
 
 [node name="KeyLight" type="DirectionalLight3D" parent="CameraTarget/CameraYaw/CameraPitch"]
 transform = Transform3D(0.707107, 0.353553, -0.612373, 0, 0.866026, 0.499999, 0.707107, -0.353553, 0.612373, 0, 0, 5)
