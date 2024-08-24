@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://bcbida0mm1e48"]
+
+[ext_resource type="PackedScene" uid="uid://dcr26yxltr5s" path="res://3d/selection_outline/selection_outline.tscn" id="1_sy0ox"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dyhsu"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_gr4nn"]
+material = SubResource("StandardMaterial3D_dyhsu")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ucl3w"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_cnpoi"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_4lxus"]
+
+[node name="OutlinePostprocessExample" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.10001)
+cull_mask = 1
+
+[node name="SelectionOutline" parent="Camera3D" instance=ExtResource("1_sy0ox")]
+outline_layers = 2
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.402108, 0.915592, 0, -0.915592, 0.402108, 0, 0, 0)
+
+[node name="VisibilityLayer2Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.793226, 0.516766, 0.322096, 0, 0.528957, -0.848649, -0.608928, 0.67317, 0.419582, 0, 0, -0.541771)
+layers = 3
+mesh = SubResource("TorusMesh_gr4nn")
+
+[node name="VisibilityLayer2Mesh2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.41256, 0, -0.0620683)
+layers = 3
+mesh = SubResource("CylinderMesh_ucl3w")
+
+[node name="VisibilityLayer3Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.0442386, -0.780635, -0.623419, -0.323013, 0.601688, -0.730502, 0.94536, 0.169056, -0.278774, -1.03277, 0, 0.258816)
+layers = 5
+mesh = SubResource("CapsuleMesh_cnpoi")
+
+[node name="VisibilityLayer3Mesh2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.941034, -0.338311, 0, 0.275455, 0.766197, -0.580575, 0.196415, 0.546341, 0.814207, 1.09328, 0, 0.215051)
+layers = 5
+mesh = SubResource("TorusMesh_4lxus")

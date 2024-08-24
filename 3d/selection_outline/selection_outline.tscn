@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://dcr26yxltr5s"]
+
+[ext_resource type="Shader" path="res://3d/selection_outline/selection_outline_quad.gdshader" id="1_usubr"]
+[ext_resource type="Script" path="res://3d/selection_outline/selection_outline.gd" id="1_xvwbl"]
+[ext_resource type="Shader" path="res://3d/selection_outline/selection_outline_canvas.gdshader" id="2_x5e6e"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mlr58"]
+render_priority = 0
+shader = ExtResource("1_usubr")
+
+[sub_resource type="QuadMesh" id="QuadMesh_pgtmj"]
+material = SubResource("ShaderMaterial_mlr58")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5aqnp"]
+shader = ExtResource("2_x5e6e")
+shader_parameter/outlineColor = Color(1, 0.627, 0.157, 1)
+
+[node name="SelectionOutline" type="Node3D"]
+script = ExtResource("1_xvwbl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+layers = 2
+mesh = SubResource("QuadMesh_pgtmj")
+skeleton = NodePath("../../..")
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="."]
+remote_path = NodePath("../SubViewportContainer/SubViewport/Camera3D")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+material = SubResource("ShaderMaterial_5aqnp")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+cull_mask = 2

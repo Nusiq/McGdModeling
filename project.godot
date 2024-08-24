@@ -61,6 +61,12 @@ shortcut.center_view_to_mouse={
 
 locale/translations=PackedStringArray("res://localization/localization.en.translation", "res://localization/localization.pl.translation")
 
+[layer_names]
+
+3d_render/layer_1="Default"
+3d_render/layer_2="Selected Objects"
+3d_render/layer_3="Active Objects"
+
 [rendering]
 
 anti_aliasing/quality/msaa_3d=2
