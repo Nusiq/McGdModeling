@@ -7,7 +7,9 @@ render_mode unshaded;
 uniform sampler2D SCREEN_TEXTURE: hint_screen_texture, repeat_disable;
 
 
-const int lineWidth = 2;
+// How many pixels from center to check for the outline (extra
+// width of the outline):
+const int lineWidth = 1;
 
 void fragment() {
 	vec4 textureHere = texture(SCREEN_TEXTURE, SCREEN_UV);
@@ -16,9 +18,6 @@ void fragment() {
 	bool isCloseToEdge = false;
 	bool isHereInside = textureHere.a > 0.0;
 	
-	// The distance is to blend the intensity from the edge. The outline is
-	// drawn in both directions (as inline and outline). 
-	float edgeDistance = 1e10;
 	for (int x = -lineWidth; x < lineWidth; x++) {
 		for (int y = -lineWidth; y < lineWidth; y++) {
 			vec2 offsetCrds = vec2(float(x), float(y));
@@ -27,22 +26,14 @@ void fragment() {
 			bool isNearbyInside = textureNearby.a > 0.0;
 			if (isHereInside != isNearbyInside) {
 				isCloseToEdge = true;
-				edgeDistance = min(
-					edgeDistance,
-					length(offsetCrds)
-				);
 			}
 		}
 	}
-	
+
 	if (isCloseToEdge) {
-		float edgeDistanceBlend =
-			1.0 - (edgeDistance/sqrt(2.0*pow(float(lineWidth), 2.0)));
-		ALBEDO = vec3(
-			edgeDistanceBlend, 0.0, 0.0);
+		ALBEDO = vec3(1.0, 0.0, 0.0);
 		DEPTH = 1e10;
 	} else {
 		ALBEDO = vec3(0.0, 0.0, 0.0);
-		//discard;
 	}
 }

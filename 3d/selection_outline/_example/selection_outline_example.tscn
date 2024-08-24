@@ -20,7 +20,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.10001)
 cull_mask = 1
 
 [node name="SelectionOutline" parent="Camera3D" instance=ExtResource("1_sy0ox")]
-outline_layers = 2
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.402108, 0.915592, 0, -0.915592, 0.402108, 0, 0, 0)
