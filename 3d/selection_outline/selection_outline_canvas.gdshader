@@ -3,7 +3,7 @@
 // vieweport to display the outlines.
 shader_type canvas_item;
 
-uniform vec3 outlineColor: source_color = vec3(1.0, 0.627, 0.157);
+uniform vec3 outlineColor: source_color = vec3(1.0, 1.0, 1.0);
 
 void fragment() {
 	if (COLOR.r == 0.0) {

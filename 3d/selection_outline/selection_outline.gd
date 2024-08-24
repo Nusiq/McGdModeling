@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var outline_color: Color = Color(1.0, 0.627, 0.157, 1.0):
+@export var outline_color: Color = Color(1.0, 1.0, 1.0, 1.0):
 	get:
 		return outline_color
 	set(value):

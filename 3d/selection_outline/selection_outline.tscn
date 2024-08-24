@@ -15,7 +15,7 @@ material = SubResource("ShaderMaterial_mlr58")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5aqnp"]
 resource_local_to_scene = true
 shader = ExtResource("2_x5e6e")
-shader_parameter/outlineColor = Color(1, 0.627, 0.157, 1)
+shader_parameter/outlineColor = Color(1, 1, 1, 1)
 
 [node name="SelectionOutline" type="Node3D"]
 script = ExtResource("1_xvwbl")
