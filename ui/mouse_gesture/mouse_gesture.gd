@@ -36,13 +36,13 @@ func _process(_delta: float) -> void:
 		) / size
 		match current_gesture:
 			Gesture.ROTATING:
-				emit_signal("rotate_gesture", delta_pos)
+				rotate_gesture.emit(delta_pos)
 			Gesture.PANNING:
-				emit_signal("pan_gesture", delta_pos)
+				pan_gesture.emit(delta_pos)
 			Gesture.ZOOMING:
-				emit_signal("zoom_gesture", delta_pos)
+				zoom_gesture.emit(delta_pos)
 	else:
-		emit_signal("reset_gesture")
+		reset_gesture.emit()
 
 ## Called automatically on GUI inputs.
 ## Starts the mouse gestures tracking when the proper key combination is

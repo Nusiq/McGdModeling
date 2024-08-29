@@ -132,10 +132,10 @@ func center_view_to_mouse(mouse_pos: Vector2) -> void:
 		Logging.info(tr("editor_viewport.center_view_to_mouse.no_target"))
 
 func _ready() -> void:
-	mouse_gesture.connect("rotate_gesture", _on_rotate_gesture)
-	mouse_gesture.connect("pan_gesture", _on_pan_gesture)
-	mouse_gesture.connect("zoom_gesture", _on_zoom_gesture)
-	mouse_gesture.connect("reset_gesture", _on_reset_gesture)
+	mouse_gesture.rotate_gesture.connect(_on_rotate_gesture)
+	mouse_gesture.pan_gesture.connect(_on_pan_gesture)
+	mouse_gesture.zoom_gesture.connect(_on_zoom_gesture)
+	mouse_gesture.reset_gesture.connect(_on_reset_gesture)
 
 func _process(_delta: float) -> void:
 	# Check and notify the changes in the global camera transform
