@@ -23,11 +23,11 @@ signal reset_gesture()
 ## 
 ## @param delta The elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	if Input.is_action_just_released("gesture.rotate_view", true):
+	if Input.is_action_just_released("gesture.rotate_view", false):
 		current_gesture = Gesture.NONE
-	if Input.is_action_just_released("gesture.pan_view", true):
+	if Input.is_action_just_released("gesture.pan_view", false):
 		current_gesture = Gesture.NONE
-	if Input.is_action_just_released("gesture.zoom_view", true):
+	if Input.is_action_just_released("gesture.zoom_view", false):
 		current_gesture = Gesture.NONE
 
 	if current_gesture != Gesture.NONE:
@@ -50,7 +50,7 @@ func _process(_delta: float) -> void:
 ##
 ## @param event The GUI input event.
 func _gui_input(event: InputEvent) -> void:
-	## Detect the start of the gesture and save the starting point
+	# Detect the start of the gesture and save the starting point
 	if event.is_action_pressed("gesture.rotate_view", false, true):
 		current_gesture = Gesture.ROTATING
 		gestrue_start_position = get_global_mouse_position()
