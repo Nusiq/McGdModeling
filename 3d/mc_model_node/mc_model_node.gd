@@ -1,4 +1,4 @@
-extends Node3D
+extends SelectableNode
 
 ## A base class of of the 3D components of the Minecraft model like
 ## cubes and bones.

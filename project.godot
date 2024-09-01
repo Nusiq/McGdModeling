@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 SetupCleanup="*res://global_script/setup_cleanup.gd"
 XJSON="*res://global_script/xjson.gd"
+ModeManager="*res://global_script/mode_manager.gd"
 
 [debug]
 
@@ -54,6 +55,11 @@ shortcut.zoom_out_view={
 shortcut.center_view_to_mouse={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":true,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":4,"position":Vector2(166, 16),"global_position":Vector2(170, 57),"factor":1.0,"button_index":3,"canceled":false,"pressed":true,"double_click":false,"script":null)
+]
+}
+shortcut.viewport_click={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(510, 10),"global_position":Vector2(519, 56),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
 

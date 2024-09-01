@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://3d/mc_model/mc_model.gd" id="1_rstvo"]
 
-[node name="McModel" type="Node3D"]
+[node name="McModel" type="Node3D" groups=["mc_models"]]
 script = ExtResource("1_rstvo")

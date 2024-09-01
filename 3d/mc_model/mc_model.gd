@@ -1,4 +1,4 @@
-extends Node3D
+extends SelectableNode
 
 ## Represents a Minecraft model.
 class_name McModel
@@ -11,6 +11,40 @@ var visible_bounds_height := 1.0
 var visible_bounds_offset := Vector3(0, 0, 0)
 
 var material_provider: McMaterialProvider = null
+
+## The currently active cube.
+var active_cube: McCube = null:
+	get:
+		return active_cube
+	set(value):
+		# Update the visibility of the previous active object.
+		if active_cube != null:
+			if active_cube.is_selected:
+				active_cube.view_selected()
+			else:
+				active_cube.view_deselected()
+		# Update the visibility of the new active object.
+		if value != null:
+			value.view_active()
+		# Set the new active object
+		active_cube = value
+
+## The currently active bone.
+var active_bone: McBone = null:
+	get:
+		return active_bone
+	set(value):
+		# Update the visibility of the previous active object.
+		if active_bone != null:
+			if active_bone.is_selected:
+				active_bone.view_selected()
+			else:
+				active_bone.view_deselected()
+		# Update the visibility of the new active object.
+		if value != null:
+			value.view_active()
+		# Set the new active object
+		active_bone = value
 
 ## Adds new child bone to this model. Returns a handle for the newly created
 ## object. Optionally, a McBone object can be passed, in which case no new
@@ -32,7 +66,7 @@ func get_root_bones() -> Array[McBone]:
 			result.append(child)
 	return result
 
-## Returns all of the bones that are children of this model.
+## Returns all of the bones that are children of this model recursively.
 func get_all_bones() -> Array[McBone]:
 	var result: Array[McBone] = []
 	var bones_to_check := get_root_bones()
@@ -162,3 +196,30 @@ func remove_bones() -> void:
 func redraw_mesh() -> void:
 	for bone in get_all_bones():
 		bone.redraw_mesh()
+
+# SelectableNode INTERFACE IMPLEMENTATION
+## Makes the model appear as active in the editor.
+func view_active() -> void:
+	for bone in get_all_bones():
+		for cube in bone.get_cubes():
+			cube.mesh_instance.layers = 5
+
+## Makes the model appear as selected in the editor.
+func view_selected() -> void:
+	for bone in get_all_bones():
+		for cube in bone.get_cubes():
+			cube.mesh_instance.layers = 3
+
+## Makes the model appear as deselected in the editor.
+func view_deselected() -> void:
+	for bone in get_all_bones():
+		for cube in bone.get_cubes():
+			cube.mesh_instance.layers = 1
+
+# WARNING:
+# Don't use the SelectableNode functions that start with and underscore
+# directly!
+func _get_active_sibling() -> SelectableNode:
+	return ModeManager.active_object
+func _set_active_sibling(value: SelectableNode) -> void:
+	ModeManager.active_object = value

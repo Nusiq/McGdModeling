@@ -4,6 +4,7 @@ class_name McCube
 
 @onready var mesh_instance: MeshInstance3D = $Pivot/CounterPivot/Mesh
 @onready var mesh_collision: CollisionShape3D = $Pivot/CounterPivot/Mesh/StaticBody3D/CollisionShape3D
+@onready var static_body: McCubeStaticBody3D = $Pivot/CounterPivot/Mesh/StaticBody3D
 
 # 0 - front/right/down
 # 1 - front/left/down
@@ -244,6 +245,7 @@ func _ready() -> void:
 	super._ready()
 	mc_size = mc_size
 	mc_origin = mc_origin
+	static_body.owning_cube = self
 
 func load_from_object(obj: Dictionary, path_so_far: Array = []) -> WrappedError:
 	# Size (optional)
@@ -296,3 +298,24 @@ func load_from_object(obj: Dictionary, path_so_far: Array = []) -> WrappedError:
 			)
 			mc_uv = McCubeUVStandard.new()
 	return null
+
+# SelectableNode INTERFACE IMPLEMENTATION
+## Makes the cube appear as active in the editor.
+func view_active() -> void:
+	mesh_instance.layers = 5
+
+## Makes the cube appear as selected in the editor.
+func view_selected() -> void:
+	mesh_instance.layers = 3
+
+## Makes the cube appear as deselected in the editor.
+func view_deselected() -> void:
+	mesh_instance.layers = 1
+
+# WARNING:
+# Don't use the SelectableNode functions that start with and underscore
+# directly!
+func _get_active_sibling() -> SelectableNode:
+	return owning_model.active_cube
+func _set_active_sibling(value: SelectableNode) -> void:
+	owning_model.active_cube = value

@@ -4,6 +4,10 @@ extends Node3D
 @onready var texture_file_dialog: CachedFileDialog = $CachedFileDialogTexture
 @onready var mc_model: McModel = $McModel
 
+func _ready() -> void:
+	mc_model.is_active = true
+	ModeManager.current_mode = ModeManager.Mode.MESH
+
 func _on_cached_file_dialog_model_file_selected(path: String) -> void:
 	mc_model.remove_bones()
 

@@ -117,19 +117,38 @@ func _on_reset_gesture() -> void:
 		is_mouse_gesture = false
 #endregion
 
-## Moves the camera target to the location clicked by the user.
-func center_view_to_mouse(mouse_pos: Vector2) -> void:
+## Casts a ray from the mouse position to the 3D world.
+## See the PhysicsDirectSpaceState3D.intersect_ray() for more information about
+## the structure of the returned dictionary.
+func cast_ray_from_mouse(mouse_pos: Vector2) -> Dictionary:
 	var ray_length := 10000.0
 	var origin := camera.project_ray_origin(mouse_pos)
 	var target := origin + camera.project_ray_normal(mouse_pos) * ray_length
 	var space_state := get_world_3d().direct_space_state
 	var query := PhysicsRayQueryParameters3D.create(origin, target)
-	var result := space_state.intersect_ray(query)
+	return space_state.intersect_ray(query)
 
+## Moves the camera target to the location clicked by the user.
+func center_view_to_mouse(mouse_pos: Vector2) -> void:
+	var result := cast_ray_from_mouse(mouse_pos)
 	if result:
 		camera_target.position = result.position
 	else:
 		Logging.info(tr("editor_viewport.center_view_to_mouse.no_target"))
+
+
+func click_mouse(mouse_pos: Vector2, is_adding: bool) -> void:
+	var result := cast_ray_from_mouse(mouse_pos)
+	
+	if len(result) == 0: # No collision
+		if is_adding:
+			return
+		ModeManager.deselect_all_in_context()
+		return
+	if not result.collider is McCubeStaticBody3D:
+		return
+	var collider: McCubeStaticBody3D = result.collider
+	ModeManager.select_object_in_context(collider, is_adding)
 
 func _ready() -> void:
 	mouse_gesture.rotate_gesture.connect(_on_rotate_gesture)
@@ -160,3 +179,8 @@ func _input(event: InputEvent) -> void:
 			# Using position from mouse_gesture object and not from the event
 			# because the user could rebind the shortcut to a keyboard event
 			mouse_gesture.get_local_mouse_position())
+	elif event.is_action_pressed("shortcut.viewport_click", false, false):
+		click_mouse(
+			mouse_gesture.get_local_mouse_position(),
+			Input.is_key_pressed(KEY_SHIFT)
+		)

@@ -124,3 +124,27 @@ func load_from_object(obj: Dictionary, path_so_far: Array = []) -> WrappedError:
 func redraw_mesh() -> void:
 	for cube in get_cubes():
 		cube.redraw_mesh()
+
+# SelectableNode INTERFACE IMPLEMENTATION
+## Makes the bone appear as active in the editor.
+func view_active() -> void:
+	for cube in get_cubes():
+		cube.mesh_instance.layers = 5
+
+## Makes the bone appear as selected in the editor.
+func view_selected() -> void:
+	for cube in get_cubes():
+		cube.mesh_instance.layers = 3
+
+## Makes the bone appear as deselected in the editor.
+func view_deselected() -> void:
+	for cube in get_cubes():
+		cube.mesh_instance.layers = 1
+
+# WARNING:
+# Don't use the SelectableNode functions that start with and underscore
+# directly!
+func _get_active_sibling() -> SelectableNode:
+	return owning_model.active_bone
+func _set_active_sibling(value: SelectableNode) -> void:
+	owning_model.active_bone = value
