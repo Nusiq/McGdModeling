@@ -39,3 +39,8 @@ error.mc_model.invalid_root_type,"Invalid model format, root must be an object."
 error.mc_cube.load_from_object.uv_wrong_type,"The ""uv"" property is not an array or an object.","Warotść ""uv"" nie jest tablicą ani obiektem."
 error.mc_material_provider.unable_to_load_image,"Unable to load the image from the file: {path}","Nie udało się załadować obrazu z pliku: {path}."
 error.mc_material_provider.texture_is_empty,"The texture is empty: {path}","Tekstura jest pusta: {path}."
+info.mode_manager.cannot_switch_to_bone,"You need to select a model before switching to the Bone Mode.","Przed przejściem do trybu Edycji Kości musisz wybrać model."
+info.mode_manager.cannot_switch_to_mesh,"You need to select a model before switching to the Mesh Mode.","Przed przejściem do trybu Edycji Siatki musisz wybrać model."
+scene_mode,Scene Mode,Tryb Edycji Sceny
+bone_mode,Bone Mode,Tryb Edycji Kości
+mesh_mode,Mesh Mode,Tryb Edycji Siatki

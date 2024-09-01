@@ -7,6 +7,8 @@ enum Mode {
 	MESH,
 }
 
+signal mode_changed(previous: Mode, current: Mode)
+
 ## The current working mode of the application.
 var current_mode: Mode = Mode.SCENE:
 	get:
@@ -28,6 +30,14 @@ var current_mode: Mode = Mode.SCENE:
 			Mode.MESH:
 				for cube: McCube in get_tree().get_nodes_in_group("mc_cubes"):
 					cube.view_deselected()
+		# If there is no active object, cannot switch to the bone or mesh mode
+		if active_object == null:
+			if value == Mode.BONE:
+				Logging.info(tr("info.mode_manager.cannot_switch_to_bone"))
+				value = Mode.SCENE
+			elif value == Mode.MESH:
+				Logging.info(tr("info.mode_manager.cannot_switch_to_mesh"))
+				value = Mode.SCENE
 		# Update the visibility of the objects of the new mode
 		match value:
 			Mode.SCENE:
@@ -46,6 +56,9 @@ var current_mode: Mode = Mode.SCENE:
 							"mc_cubes"):
 						if cube.owning_model == active_object:
 							cube.selection.view_sync()
+		# Checking again, because invalid mode choices may lead to no changes
+		if current_mode != value:
+			mode_changed.emit(current_mode, value)
 		current_mode = value
 		
 
@@ -188,3 +201,11 @@ func select_object_in_context(object: McCubeStaticBody3D, is_adding: bool) -> vo
 			select_bone(active_object, object.owning_cube.owning_bone, is_adding)
 		Mode.MESH:
 			select_mesh(active_object, object.owning_cube, is_adding)
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("shortcut.activate_scene_mode", false, true):
+		current_mode = Mode.SCENE
+	elif event.is_action_pressed("shortcut.activate_bone_mode", false, true):
+		current_mode = Mode.BONE
+	elif event.is_action_pressed("shortcut.activate_mesh_mode", false, true):
+		current_mode = Mode.MESH

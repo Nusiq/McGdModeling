@@ -1,12 +1,12 @@
 extends Node3D
 
+@onready var mode_label: Label = $GridContainer/Label
 @onready var model_file_dialog: CachedFileDialog = $CachedFileDialogModel
 @onready var texture_file_dialog: CachedFileDialog = $CachedFileDialogTexture
 @onready var mc_model: McModel = $McModel
 
 func _ready() -> void:
-	mc_model.selection.is_active = true
-	ModeManager.current_mode = ModeManager.Mode.MESH
+	ModeManager.mode_changed.connect(_on_mode_changed)
 
 func _on_cached_file_dialog_model_file_selected(path: String) -> void:
 	mc_model.remove_bones()
@@ -29,3 +29,12 @@ func _on_button_load_model_pressed() -> void:
 
 func _on_button_load_texture_pressed() -> void:
 	texture_file_dialog.popup()
+
+func _on_mode_changed(_from: ModeManager.Mode, to: ModeManager.Mode) -> void:
+	match to:
+		ModeManager.Mode.SCENE:
+			mode_label.text = tr("scene_mode")
+		ModeManager.Mode.BONE:
+			mode_label.text = tr("bone_mode")
+		ModeManager.Mode.MESH:
+			mode_label.text = tr("mesh_mode")

@@ -23,6 +23,10 @@ memory_group = "texture"
 offset_right = 110.0
 offset_bottom = 66.0
 
+[node name="Label" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "scene_mode"
+
 [node name="ButtonLoadModel" type="Button" parent="GridContainer"]
 layout_mode = 2
 text = "Load model"
