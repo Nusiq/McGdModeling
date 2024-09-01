@@ -108,7 +108,10 @@ func redraw_mesh() -> void:
 		elif i < 30: axis = 2 # Top
 		else: axis = 2 # Bottom
 		var index := faces[i]
-		if mc_uv != null and owning_model != null:
+		assert(
+			owning_model != null,
+			"Invalid state - cube must have owning model.")
+		if mc_uv != null:
 			# Prepare function for setting the material, based on the existence
 			# of the material provider
 			var set_material := func(
@@ -116,8 +119,7 @@ func redraw_mesh() -> void:
 			if owning_model.material_provider != null:
 				assert(
 					owning_bone != null,
-					"Invalid state - cube belongs to a model but doesn't "
-					+ "belong to a bone.")
+					"Invalid state - cube must have owning bone.")
 				set_material = func(material_instance: StringOption) -> void:
 					st.set_material(
 						owning_model.material_provider.query_material(

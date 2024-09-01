@@ -8,4 +8,3 @@
 [node name="EditorViewport" parent="." instance=ExtResource("1_8184t")]
 
 [node name="Line" parent="." instance=ExtResource("2_t00y5")]
-thickness = 0.0
