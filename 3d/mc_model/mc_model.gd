@@ -1,4 +1,4 @@
-extends SelectableNode
+extends Node3D
 
 ## Represents a Minecraft model.
 class_name McModel
@@ -19,7 +19,7 @@ var active_cube: McCube = null:
 	set(value):
 		# Update the visibility of the previous active object.
 		if active_cube != null:
-			if active_cube.is_selected:
+			if active_cube.selection.is_selected:
 				active_cube.view_selected()
 			else:
 				active_cube.view_deselected()
@@ -36,7 +36,7 @@ var active_bone: McBone = null:
 	set(value):
 		# Update the visibility of the previous active object.
 		if active_bone != null:
-			if active_bone.is_selected:
+			if active_bone.selection.is_selected:
 				active_bone.view_selected()
 			else:
 				active_bone.view_deselected()
@@ -45,6 +45,27 @@ var active_bone: McBone = null:
 			value.view_active()
 		# Set the new active object
 		active_bone = value
+
+## Component that expands the functionality of the model to enable it to be
+## selected and deselected in the editor.
+var selection := SelectableNode.new()
+
+## Implements missing methods for the SelectableNode interface.
+class SelectableNodeImpl extends SelectableNode.Interface:
+	var owner: McModel = null
+	func _init(_owner: McModel) -> void:
+		owner = _owner
+	func get_active_sibling() -> SelectableNode:
+		if ModeManager.active_object == null:
+			return null
+		return ModeManager.active_object.selection
+	func set_self_as_active() -> void:
+		ModeManager.active_object = owner
+	func reset_active_sibling() -> void:
+		ModeManager.active_object = null
+	func view_active() -> void: owner.view_active()
+	func view_selected() -> void: owner.view_selected()
+	func view_deselected() -> void: owner.view_deselected()
 
 ## Adds new child bone to this model. Returns a handle for the newly created
 ## object. Optionally, a McBone object can be passed, in which case no new
@@ -216,10 +237,7 @@ func view_deselected() -> void:
 		for cube in bone.get_cubes():
 			cube.mesh_instance.layers = 1
 
-# WARNING:
-# Don't use the SelectableNode functions that start with and underscore
-# directly!
-func _get_active_sibling() -> SelectableNode:
-	return ModeManager.active_object
-func _set_active_sibling(value: SelectableNode) -> void:
-	ModeManager.active_object = value
+
+func _ready() -> void:
+	# Add selectable node interface
+	selection.methods = SelectableNodeImpl.new(self)

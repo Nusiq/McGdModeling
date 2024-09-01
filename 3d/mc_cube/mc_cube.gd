@@ -45,6 +45,27 @@ var mc_uv: McCubeUv = null
 ## because for Nodes, Godot uses the tree structure to manage memory.
 var owning_bone: McBone = null
 
+## Component that expands the functionality of the model to enable it to be
+## selected and deselected in the editor.
+var selection := SelectableNode.new()
+
+## Implements missing methods for the SelectableNode interface.
+class SelectableNodeImpl extends SelectableNode.Interface:
+	var owner: McCube = null
+	func _init(_owner: McCube) -> void:
+		owner = _owner
+	func get_active_sibling() -> SelectableNode:
+		if owner.owning_model.active_cube == null:
+			return null
+		return owner.owning_model.active_cube.selection
+	func set_self_as_active() -> void:
+		owner.owning_model.active_cube = owner
+	func reset_active_sibling() -> void:
+		owner.owning_model.active_cube = null
+	func view_active() -> void: owner.view_active()
+	func view_selected() -> void: owner.view_selected()
+	func view_deselected() -> void: owner.view_deselected()
+
 func redraw_mesh() -> void:
 	# Update collision
 	mesh_collision.shape.size = abs(mc_size)
@@ -246,6 +267,8 @@ func _ready() -> void:
 	mc_size = mc_size
 	mc_origin = mc_origin
 	static_body.owning_cube = self
+	# Add selectable node interface
+	selection.methods = SelectableNodeImpl.new(self)
 
 func load_from_object(obj: Dictionary, path_so_far: Array = []) -> WrappedError:
 	# Size (optional)
@@ -311,11 +334,3 @@ func view_selected() -> void:
 ## Makes the cube appear as deselected in the editor.
 func view_deselected() -> void:
 	mesh_instance.layers = 1
-
-# WARNING:
-# Don't use the SelectableNode functions that start with and underscore
-# directly!
-func _get_active_sibling() -> SelectableNode:
-	return owning_model.active_cube
-func _set_active_sibling(value: SelectableNode) -> void:
-	owning_model.active_cube = value

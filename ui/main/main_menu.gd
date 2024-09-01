@@ -5,7 +5,7 @@ extends Node3D
 @onready var mc_model: McModel = $McModel
 
 func _ready() -> void:
-	mc_model.is_active = true
+	mc_model.selection.is_active = true
 	ModeManager.current_mode = ModeManager.Mode.MESH
 
 func _on_cached_file_dialog_model_file_selected(path: String) -> void:

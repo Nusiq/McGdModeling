@@ -15,6 +15,27 @@ var mc_parent: StringOption = null
 ## name. The model object is responsible for maintaining the correct structure.
 var mc_name: String = ""
 
+## Component that expands the functionality of the model to enable it to be
+## selected and deselected in the editor.
+var selection := SelectableNode.new()
+
+## Implements missing methods for the SelectableNode interface.
+class SelectableNodeImpl extends SelectableNode.Interface:
+	var owner: McBone = null
+	func _init(_owner: McBone) -> void:
+		owner = _owner
+	func get_active_sibling() -> SelectableNode:
+		if owner.owning_model.active_bone == null:
+			return null
+		return owner.owning_model.active_bone.selection
+	func set_self_as_active() -> void:
+		owner.owning_model.active_bone = owner
+	func reset_active_sibling() -> void:
+		owner.owning_model.active_bone = null
+	func view_active() -> void: owner.view_active()
+	func view_selected() -> void: owner.view_selected()
+	func view_deselected() -> void: owner.view_deselected()
+
 ## Create the Bone object with its coresponding scene
 static func new_scene(owning_model_: McModel) -> McBone:
 	var result: McBone = this_scene.instantiate()
@@ -24,6 +45,8 @@ static func new_scene(owning_model_: McModel) -> McBone:
 
 func _ready() -> void:
 	super._ready()
+	# Add selectable node interface
+	selection.methods = SelectableNodeImpl.new(self)
 
 ## Adds new cube to the bone. Returns a handle for the newly created object.
 ## Optionally, a McCube object can be passed, in which case no new object is
@@ -140,11 +163,3 @@ func view_selected() -> void:
 func view_deselected() -> void:
 	for cube in get_cubes():
 		cube.mesh_instance.layers = 1
-
-# WARNING:
-# Don't use the SelectableNode functions that start with and underscore
-# directly!
-func _get_active_sibling() -> SelectableNode:
-	return owning_model.active_bone
-func _set_active_sibling(value: SelectableNode) -> void:
-	owning_model.active_bone = value

@@ -33,19 +33,19 @@ var current_mode: Mode = Mode.SCENE:
 			Mode.SCENE:
 				for model: McModel in get_tree().get_nodes_in_group(
 						"mc_models"):
-					model.view_sync()
+					model.selection.view_sync()
 			Mode.BONE:
 				if active_object != null:
 					for bone: McBone in get_tree().get_nodes_in_group(
 							"mc_bones"):
 						if bone.owning_model == active_object:
-							bone.view_sync()
+							bone.selection.view_sync()
 			Mode.MESH:
 				if active_object != null:
 					for cube: McCube in get_tree().get_nodes_in_group(
 							"mc_cubes"):
 						if cube.owning_model == active_object:
-							cube.view_sync()
+							cube.selection.view_sync()
 		current_mode = value
 		
 
@@ -56,7 +56,7 @@ var active_object: McModel = null:
 	set(value):
 		# Update the visibility of the previous active object
 		if active_object != null:
-			if active_object.is_selected:
+			if active_object.selection.is_selected:
 				active_object.view_selected()
 			else:
 				active_object.view_deselected()
@@ -83,7 +83,7 @@ func deselect_all_in_context() -> void:
 func deselect_all_root_objects() -> void:
 	active_object = null
 	for model: McModel in get_tree().get_nodes_in_group("mc_models"):
-		model.is_selected = false
+		model.selection.is_selected = false
 
 ## Deselects all of the bones of the given model.
 func deselect_all_bones(active_model: McModel) -> void:
@@ -91,7 +91,7 @@ func deselect_all_bones(active_model: McModel) -> void:
 		return
 	active_model.active_bone = null
 	for bone in active_model.get_all_bones():
-		bone.is_selected = false
+		bone.selection.is_selected = false
 
 ## Deselects all of the meshes of the given model.
 func deselect_all_meshes(active_model: McModel) -> void:
@@ -100,7 +100,7 @@ func deselect_all_meshes(active_model: McModel) -> void:
 	active_model.active_cube = null
 	for bone in active_model.get_all_bones():
 		for cube in bone.get_cubes():
-			cube.is_selected = false
+			cube.selection.is_selected = false
 
 
 ## Selects a root object. See select_object_in_context for more details.
@@ -108,20 +108,20 @@ func select_root_object(object: McModel, is_adding: bool) -> void:
 	if not is_adding:
 		# Overwriting selection
 		deselect_all_root_objects()
-		object.is_selected = true
+		object.selection.is_selected = true
 		active_object = object
 		return
-	if object.is_selected:
+	if object.selection.is_selected:
 		if active_object == object:
 			# Deselecting active object
-			object.is_selected = false
+			object.selection.is_selected = false
 			active_object = null
 		else:
 			# Reassigning active object
 			active_object = object
 	else:
 		# Selecting new object
-		object.is_selected = true
+		object.selection.is_selected = true
 		active_object = object
 
 ## Selects a bone object. See select_object_in_context for more details.
@@ -133,20 +133,20 @@ func select_bone(active_model: McModel, object: McBone, is_adding: bool) -> void
 	if not is_adding:
 		# Overwriting selection
 		deselect_all_bones(active_model)
-		object.is_selected = true
+		object.selection.is_selected = true
 		active_model.active_bone = object
 		return
-	if object.is_selected:
+	if object.selection.is_selected:
 		if active_model.active_bone == object:
 			# Deselecting active object
-			object.is_selected = false
+			object.selection.is_selected = false
 			active_model.active_bone = null
 		else:
 			# Reassigning active object
 			active_model.active_bone = object
 	else:
 		# Selecting new object
-		object.is_selected = true
+		object.selection.is_selected = true
 		active_model.active_bone = object
 
 ## Selects a mesh object. See select_object_in_context for more details.
@@ -158,20 +158,20 @@ func select_mesh(active_model: McModel, object: McCube, is_adding: bool) -> void
 	if not is_adding:
 		# Overwriting selection
 		deselect_all_meshes(active_model)
-		object.is_selected = true
+		object.selection.is_selected = true
 		active_model.active_cube = object
 		return
-	if object.is_selected:
+	if object.selection.is_selected:
 		if active_model.active_cube == object:
 			# Deselecting active object
-			object.is_selected = false
+			object.selection.is_selected = false
 			active_model.active_cube = null
 		else:
 			# Reassigning active object
 			active_model.active_cube = object
 	else:
 		# Selecting new object
-		object.is_selected = true
+		object.selection.is_selected = true
 		active_model.active_cube = object
 
 ## Selects an object (different kind based no the current mode) based on the
