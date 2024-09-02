@@ -170,10 +170,12 @@ func _input(event: InputEvent) -> void:
 		if is_mouse_gesture:
 			return
 		_on_zoom_gesture(Vector2.UP * zoom_sensitivity_scrolling)
+		is_mouse_gesture = false
 	elif event.is_action_pressed("shortcut.zoom_out_view", false, true):
 		if is_mouse_gesture:
 			return
 		_on_zoom_gesture(Vector2.DOWN * zoom_sensitivity_scrolling)
+		is_mouse_gesture = false
 	elif event.is_action_pressed("shortcut.center_view_to_mouse", false, true):
 		center_view_to_mouse(
 			# Using position from mouse_gesture object and not from the event
