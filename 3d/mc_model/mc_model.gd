@@ -48,24 +48,8 @@ var active_bone: McBone = null:
 
 ## Component that expands the functionality of the model to enable it to be
 ## selected and deselected in the editor.
-var selection := SelectableNode.new()
+var selection := McModelSelectableComponentImpl.new(self)
 
-## Implements missing methods for the SelectableNode interface.
-class SelectableNodeImpl extends SelectableNode.Interface:
-	var owner: McModel = null
-	func _init(_owner: McModel) -> void:
-		owner = _owner
-	func get_active_sibling() -> SelectableNode:
-		if ModeManager.active_object == null:
-			return null
-		return ModeManager.active_object.selection
-	func set_self_as_active() -> void:
-		ModeManager.active_object = owner
-	func reset_active_sibling() -> void:
-		ModeManager.active_object = null
-	func view_active() -> void: owner.view_active()
-	func view_selected() -> void: owner.view_selected()
-	func view_deselected() -> void: owner.view_deselected()
 
 ## Adds new child bone to this model. Returns a handle for the newly created
 ## object. Optionally, a McBone object can be passed, in which case no new
@@ -218,7 +202,6 @@ func redraw_mesh() -> void:
 	for bone in get_all_bones():
 		bone.redraw_mesh()
 
-# SelectableNode INTERFACE IMPLEMENTATION
 ## Makes the model appear as active in the editor.
 func view_active() -> void:
 	for bone in get_all_bones():
@@ -236,8 +219,3 @@ func view_deselected() -> void:
 	for bone in get_all_bones():
 		for cube in bone.get_cubes():
 			cube.mesh_instance.layers = 1
-
-
-func _ready() -> void:
-	# Add selectable node interface
-	selection.methods = SelectableNodeImpl.new(self)

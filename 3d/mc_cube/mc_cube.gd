@@ -47,24 +47,14 @@ var owning_bone: McBone = null
 
 ## Component that expands the functionality of the model to enable it to be
 ## selected and deselected in the editor.
-var selection := SelectableNode.new()
+var selection := McCubeSelectableComponentImpl.new(self)
 
-## Implements missing methods for the SelectableNode interface.
-class SelectableNodeImpl extends SelectableNode.Interface:
-	var owner: McCube = null
-	func _init(_owner: McCube) -> void:
-		owner = _owner
-	func get_active_sibling() -> SelectableNode:
-		if owner.owning_model.active_cube == null:
-			return null
-		return owner.owning_model.active_cube.selection
-	func set_self_as_active() -> void:
-		owner.owning_model.active_cube = owner
-	func reset_active_sibling() -> void:
-		owner.owning_model.active_cube = null
-	func view_active() -> void: owner.view_active()
-	func view_selected() -> void: owner.view_selected()
-	func view_deselected() -> void: owner.view_deselected()
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	super._ready()
+	mc_size = mc_size
+	mc_origin = mc_origin
+	static_body.owning_cube = self
 
 func redraw_mesh() -> void:
 	# Update collision
@@ -263,15 +253,6 @@ static func new_scene(owning_model_: McModel, owning_bone_: McBone) -> McCube:
 	return result
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	super._ready()
-	mc_size = mc_size
-	mc_origin = mc_origin
-	static_body.owning_cube = self
-	# Add selectable node interface
-	selection.methods = SelectableNodeImpl.new(self)
-
 func load_from_object(obj: Dictionary, path_so_far: Array = []) -> WrappedError:
 	# Size (optional)
 	var size := XJSON.get_vector3_from_object(obj, "size", path_so_far)
@@ -324,7 +305,6 @@ func load_from_object(obj: Dictionary, path_so_far: Array = []) -> WrappedError:
 			mc_uv = McCubeUVStandard.new()
 	return null
 
-# SelectableNode INTERFACE IMPLEMENTATION
 ## Makes the cube appear as active in the editor.
 func view_active() -> void:
 	mesh_instance.layers = 5
