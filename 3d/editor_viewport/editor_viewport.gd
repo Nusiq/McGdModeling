@@ -57,11 +57,10 @@ func get_global_camera_target_transform() -> Transform3D:
 #region Gesture Interface
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of rotateing the camera. 
-func _on_rotate_gesture(delta_poz: Vector2) -> void:
-	if not is_mouse_gesture:
+func _on_rotate_gesture(delta_poz: Vector2, just_started: bool) -> void:
+	if just_started:
 		gesture_rotate_start = Vector3(
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
-		is_mouse_gesture = true
 	camera_pitch.rotation.x = fposmod(
 		gesture_rotate_start.x - delta_poz.y * rotation_sensitivity, TAU)
 	# Reverse yaw if upside down
@@ -75,13 +74,12 @@ func _on_rotate_gesture(delta_poz: Vector2) -> void:
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of panning the camera. 
-func _on_pan_gesture(delta_poz: Vector2) -> void:
-	if not is_mouse_gesture:
+func _on_pan_gesture(delta_poz: Vector2, just_started: bool) -> void:
+	if just_started:
 		gesture_zoom_start = camera.position.z # Zoom affects sensitivity
 		gesture_pan_start = camera_target.position
 		gesture_rotate_start = Vector3(
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
-		is_mouse_gesture = true
 	
 	var right_left := Vector3.RIGHT.rotated(Vector3.UP, gesture_rotate_start.y)
 	var up_down := Vector3.UP.rotated(
@@ -95,13 +93,17 @@ func _on_pan_gesture(delta_poz: Vector2) -> void:
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of zooming the camera. 
-func _on_zoom_gesture(delta_poz: Vector2) -> void:
-	if not is_mouse_gesture:
+func _on_zoom_gesture(delta_poz: Vector2, just_started: bool) -> void:
+	if just_started:
 		gesture_zoom_start = camera.position.z
-		is_mouse_gesture = true
+	change_zoom(gesture_zoom_start, delta_poz.y)
+
+## Changes the zoom of the camera assuming that the camera's original position
+## is starting_camera_position_z and the delta is the change in the zoom.
+func change_zoom(starting_camera_position_z: float, delta: float) -> void:
 	camera.position.z = (
-		gesture_zoom_start
-		+ gesture_zoom_start * delta_poz.y * zoom_sensitivity)
+		starting_camera_position_z
+		+ starting_camera_position_z * delta * zoom_sensitivity)
 	if camera.position.z < min_view_distance:
 		camera.position.z = min_view_distance
 	elif camera.position.z > max_view_distance:
@@ -110,11 +112,9 @@ func _on_zoom_gesture(delta_poz: Vector2) -> void:
 ## Called from the child node $MouseGesture when no mouse gesture is
 ## being performed.
 func _on_reset_gesture() -> void:
-	if is_mouse_gesture:
-		gesture_zoom_start = 0.0
-		gesture_rotate_start = Vector3.ZERO
-		gesture_pan_start = Vector3.ZERO
-		is_mouse_gesture = false
+	gesture_zoom_start = 0.0
+	gesture_rotate_start = Vector3.ZERO
+	gesture_pan_start = Vector3.ZERO
 #endregion
 
 ## Casts a ray from the mouse position to the 3D world.
@@ -167,21 +167,17 @@ func _process(_delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("shortcut.zoom_in_view", false, true):
-		if is_mouse_gesture:
-			return
-		_on_zoom_gesture(Vector2.UP * zoom_sensitivity_scrolling)
-		is_mouse_gesture = false
+		change_zoom(camera.position.z, -zoom_sensitivity_scrolling)
 	elif event.is_action_pressed("shortcut.zoom_out_view", false, true):
-		if is_mouse_gesture:
-			return
-		_on_zoom_gesture(Vector2.DOWN * zoom_sensitivity_scrolling)
-		is_mouse_gesture = false
+		change_zoom(camera.position.z, zoom_sensitivity_scrolling)
 	elif event.is_action_pressed("shortcut.center_view_to_mouse", false, true):
 		center_view_to_mouse(
 			# Using position from mouse_gesture object and not from the event
 			# because the user could rebind the shortcut to a keyboard event
 			mouse_gesture.get_local_mouse_position())
-	elif event.is_action_pressed("shortcut.viewport_click", false, false):
+	elif (
+			mouse_gesture.current_gesture == MouseGesture.Gesture.NONE and
+			event.is_action_pressed("shortcut.viewport_click", false, false)):
 		click_mouse(
 			mouse_gesture.get_local_mouse_position(),
 			Input.is_key_pressed(KEY_SHIFT)

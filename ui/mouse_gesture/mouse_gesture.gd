@@ -12,9 +12,9 @@ var current_gesture := Gesture.NONE
 var gestrue_start_position := Vector2.ZERO
 
 
-signal rotate_gesture(delta_poz: Vector2)
-signal pan_gesture(delta_poz: Vector2)
-signal zoom_gesture(delta_poz: Vector2)
+signal rotate_gesture(delta_poz: Vector2, just_started: bool)
+signal pan_gesture(delta_poz: Vector2, just_started: bool)
+signal zoom_gesture(delta_poz: Vector2, just_started: bool)
 signal reset_gesture()
 
 ## Implements the conditions for triggering the mouse gestures.
@@ -51,31 +51,36 @@ func _process(_delta: float) -> void:
 		) / size
 		match current_gesture:
 			Gesture.ROTATING:
-				rotate_gesture.emit(delta_pos)
+				rotate_gesture.emit(delta_pos, false)
 			Gesture.PANNING:
-				pan_gesture.emit(delta_pos)
+				pan_gesture.emit(delta_pos, false)
 			Gesture.ZOOMING:
-				zoom_gesture.emit(delta_pos)
+				zoom_gesture.emit(delta_pos, false)
+
 
 ## Called automatically on GUI inputs.
 ## Starts the mouse gestures tracking when the proper key combination is
 ## pressed.
-##
-## @param event The GUI input event.
-func _gui_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
+	if current_gesture != Gesture.NONE:
+		return
 	# Detect the start of the gesture and save the starting point
 	if (
 			event.is_action_pressed("gesture.rotate_view", false, true)
 			and condition.rotate_gesture_condition()):
 		current_gesture = Gesture.ROTATING
 		gestrue_start_position = get_global_mouse_position()
+		rotate_gesture.emit(Vector2.ZERO, true)
 	elif (
 			event.is_action_pressed("gesture.pan_view", false, true)
 			and condition.pan_gesture_condition()):
 		current_gesture = Gesture.PANNING
 		gestrue_start_position = get_global_mouse_position()
+		pan_gesture.emit(Vector2.ZERO, true)
 	elif (
 			event.is_action_pressed("gesture.zoom_view", false, true)
 			and condition.zoom_gesture_condition()):
 		current_gesture = Gesture.ZOOMING
 		gestrue_start_position = get_global_mouse_position()
+		zoom_gesture.emit(Vector2.ZERO, true)
+
