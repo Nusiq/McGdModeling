@@ -2,26 +2,24 @@ extends Node3D
 
 class_name EditorViewport
 
-#region Node Handles
+class MouseGesterConditionImpl extends MouseGesture.Condition:
+	func move_object_gesture_condition() -> bool:
+		return ModeManager.count_selected_objects() > 0
+
 @onready var camera_target: Node3D = $CameraTarget
 @onready var camera_yaw: Node3D = $CameraTarget/CameraYaw
 @onready var camera_pitch: Node3D = $CameraTarget/CameraYaw/CameraPitch
 @onready var camera: Camera3D = $CameraTarget/CameraYaw/CameraPitch/Camera3D
 @onready var mouse_gesture: MouseGesture = $MouseGesture
-#endregion
 
-
-## Controls the state of performing mouse gestures
-var is_mouse_gesture := false
 ## Staring zoom value for zoom mouse gesture
 var gesture_zoom_start := 0.0
 ## Starting rotation value for rotation mouse gesture
 var gesture_rotate_start := Vector3.ZERO
 ## Starting position for pan mouse gesture
 var gesture_pan_start := Vector3.ZERO
- 
 
-#region Gesture Interface Config
+# Gestures configuration
 @onready var rotation_sensitivity := UserConfig.load_float(
 	"editor_viewport.rotation_sensitivity", 5.0, 0.5, 100.0)
 @onready var zoom_sensitivity := UserConfig.load_float(
@@ -34,19 +32,29 @@ var gesture_pan_start := Vector3.ZERO
 	"editor_viewport.min_view_distance", 0.1, 0.02, 2.0)
 @onready var max_view_distance := UserConfig.load_float(
 	"editor_viewport.max_view_distance", 1000, 100, 10_000.0)
-#endregion
 
+# Tmp variables to track various states
+@onready var _prev_global_camera_transform: Transform3D = \
+	get_global_camera_transform()
+@onready var _prev_global_camera_target_transform: Transform3D = \
+	get_global_camera_target_transform()
+var _move_gesture_start_world_space: Vector3 = Vector3.ZERO
+var _move_gesture_start_camera_space: Vector2 = Vector2.ZERO
+var _move_gesture_plane: Plane = Plane(Vector3.UP, Vector3.ZERO)
+var _move_gesture_affected_objects: Array[MovableComponent] = []
+enum MoveGesturePlaneType {
+	CAMERA_NEAREST_AXIS_ALIGNED,
+	CAMERA_PLANE,
+}
+var _move_gesture_plane_type := MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED
 
 ## Emitted when the camera global transform changes. Useful for tracking the
 ## camera position to handle the 3D gui element changes.
 signal camera_transform_changed(global_camera_transform: Transform3D)
-@onready var _prev_global_camera_transform: Transform3D = get_global_camera_transform()
 
 ## Emitted when the camera target global transform changes. Useful for tracking
 ## the camera target position to handle the 3D gui element changes.
 signal camera_target_transform_changed(global_camera_transform: Transform3D)
-@onready var _prev_global_camera_target_transform: Transform3D = \
-	get_global_camera_target_transform()
 
 func get_global_camera_transform() -> Transform3D:
 	return camera.global_transform
@@ -54,15 +62,17 @@ func get_global_camera_transform() -> Transform3D:
 func get_global_camera_target_transform() -> Transform3D:
 	return camera_target.global_transform
 
-#region Gesture Interface
+# Gesture handlers
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of rotateing the camera. 
-func _on_rotate_gesture(delta_poz: Vector2, just_started: bool) -> void:
-	if just_started:
+func _on_rotate_gesture(
+		delta_pos: Vector2, gesture_stage: MouseGesture.GestureStage) -> void:
+	delta_pos = delta_pos / mouse_gesture.size
+	if gesture_stage == MouseGesture.GestureStage.JUST_STARTED:
 		gesture_rotate_start = Vector3(
 			camera_pitch.rotation.x, camera_yaw.rotation.y, 0.0)
 	camera_pitch.rotation.x = fposmod(
-		gesture_rotate_start.x - delta_poz.y * rotation_sensitivity, TAU)
+		gesture_rotate_start.x - delta_pos.y * rotation_sensitivity, TAU)
 	# Reverse yaw if upside down
 	var r := (
 		1
@@ -70,12 +80,14 @@ func _on_rotate_gesture(delta_poz: Vector2, just_started: bool) -> void:
 		|| gesture_rotate_start.x < PI / 2
 		else -1)
 	camera_yaw.rotation.y = fposmod(
-		gesture_rotate_start.y - r * delta_poz.x * rotation_sensitivity, TAU)
+		gesture_rotate_start.y - r * delta_pos.x * rotation_sensitivity, TAU)
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of panning the camera. 
-func _on_pan_gesture(delta_poz: Vector2, just_started: bool) -> void:
-	if just_started:
+func _on_pan_gesture(
+		delta_pos: Vector2, gesture_stage: MouseGesture.GestureStage) -> void:
+	delta_pos = delta_pos / mouse_gesture.size
+	if gesture_stage == MouseGesture.GestureStage.JUST_STARTED:
 		gesture_zoom_start = camera.position.z # Zoom affects sensitivity
 		gesture_pan_start = camera_target.position
 		gesture_rotate_start = Vector3(
@@ -87,16 +99,18 @@ func _on_pan_gesture(delta_poz: Vector2, just_started: bool) -> void:
 	).rotated(Vector3.UP, gesture_rotate_start.y)
 	camera_target.position = (
 		gesture_pan_start +
-		up_down * delta_poz.y * gesture_zoom_start * pan_sensitivity +
-		right_left * delta_poz.x * gesture_zoom_start * pan_sensitivity
+		up_down * delta_pos.y * gesture_zoom_start * pan_sensitivity +
+		right_left * delta_pos.x * gesture_zoom_start * pan_sensitivity
 	)
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of zooming the camera. 
-func _on_zoom_gesture(delta_poz: Vector2, just_started: bool) -> void:
-	if just_started:
+func _on_zoom_gesture(
+		delta_pos: Vector2, gesture_stage: MouseGesture.GestureStage) -> void:
+	delta_pos = delta_pos / mouse_gesture.size
+	if gesture_stage == MouseGesture.GestureStage.JUST_STARTED:
 		gesture_zoom_start = camera.position.z
-	change_zoom(gesture_zoom_start, delta_poz.y)
+	change_zoom(gesture_zoom_start, delta_pos.y)
 
 ## Changes the zoom of the camera assuming that the camera's original position
 ## is starting_camera_position_z and the delta is the change in the zoom.
@@ -109,13 +123,67 @@ func change_zoom(starting_camera_position_z: float, delta: float) -> void:
 	elif camera.position.z > max_view_distance:
 		camera.position.z = max_view_distance
 
-## Called from the child node $MouseGesture when no mouse gesture is
-## being performed.
-func _on_reset_gesture() -> void:
-	gesture_zoom_start = 0.0
-	gesture_rotate_start = Vector3.ZERO
-	gesture_pan_start = Vector3.ZERO
-#endregion
+
+func update_move_gesture_plane() -> void:
+	match _move_gesture_plane_type:
+		MoveGesturePlaneType.CAMERA_PLANE:
+			_move_gesture_plane = Plane(
+				camera.global_transform.basis.z, # Normal
+				_move_gesture_start_world_space) # Point
+		MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED:
+			var normals: Array[Vector3] = [
+				Vector3.UP, Vector3.DOWN,
+				Vector3.LEFT, Vector3.RIGHT,
+				Vector3.FORWARD, Vector3.BACK]
+			var max_cos := normals[0].dot(camera.global_transform.basis.z)
+			var best_option := 0
+			for i in range(1, normals.size()):
+				var cos_ := normals[i].dot(camera.global_transform.basis.z)
+				if cos_ > max_cos:
+					max_cos = cos_
+					best_option = i
+			_move_gesture_plane = Plane(
+				normals[best_option], # Normal
+				_move_gesture_start_world_space) # Point
+
+
+## Called from the child node $MouseGesture. Handles the mouse gesture
+## of moving an object.
+func _on_move_object_gesture(
+		delta_pos: Vector2, gesture_stage: MouseGesture.GestureStage) -> void:
+	if gesture_stage == MouseGesture.GestureStage.JUST_STARTED:
+		_move_gesture_affected_objects = ModeManager.get_selected_movable_objects()
+		# Calculate the average position of the selected objects
+		_move_gesture_start_world_space = Vector3.ZERO
+		for movable in _move_gesture_affected_objects:
+			_move_gesture_start_world_space += movable.start_moving()
+		_move_gesture_start_world_space /= _move_gesture_affected_objects.size()
+		_move_gesture_start_camera_space = camera.unproject_position(
+			_move_gesture_start_world_space)
+		_move_gesture_plane_type = MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED
+		update_move_gesture_plane()
+	elif gesture_stage == MouseGesture.GestureStage.RETAPPED:
+		match _move_gesture_plane_type:
+			MoveGesturePlaneType.CAMERA_PLANE:
+				_move_gesture_plane_type = MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED
+			MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED:
+				_move_gesture_plane_type = MoveGesturePlaneType.CAMERA_PLANE
+		update_move_gesture_plane()
+	elif gesture_stage == MouseGesture.GestureStage.CANCELLED:
+		for movable in _move_gesture_affected_objects:
+			movable.reset()
+		return
+
+	var intersection: Variant = _move_gesture_plane.intersects_ray(
+		camera.project_ray_origin(_move_gesture_start_camera_space + delta_pos),
+		camera.project_ray_normal(_move_gesture_start_camera_space + delta_pos))
+	if intersection is Vector3:
+		var delta := (intersection as Vector3) - _move_gesture_start_world_space
+		for movable in _move_gesture_affected_objects:
+			movable.move(delta)
+	else:
+		for movable in _move_gesture_affected_objects:
+			movable.move(_move_gesture_start_world_space)
 
 ## Casts a ray from the mouse position to the 3D world.
 ## See the PhysicsDirectSpaceState3D.intersect_ray() for more information about
@@ -136,7 +204,6 @@ func center_view_to_mouse(mouse_pos: Vector2) -> void:
 	else:
 		Logging.info(tr("editor_viewport.center_view_to_mouse.no_target"))
 
-
 func click_mouse(mouse_pos: Vector2, is_adding: bool) -> void:
 	var result := cast_ray_from_mouse(mouse_pos)
 	
@@ -154,7 +221,8 @@ func _ready() -> void:
 	mouse_gesture.rotate_gesture.connect(_on_rotate_gesture)
 	mouse_gesture.pan_gesture.connect(_on_pan_gesture)
 	mouse_gesture.zoom_gesture.connect(_on_zoom_gesture)
-	mouse_gesture.reset_gesture.connect(_on_reset_gesture)
+	mouse_gesture.move_object_gesture.connect(_on_move_object_gesture)
+	mouse_gesture.condition = MouseGesterConditionImpl.new()
 
 func _process(_delta: float) -> void:
 	# Check and notify the changes in the global camera transform

@@ -15,9 +15,9 @@ var mc_parent: StringOption = null
 ## name. The model object is responsible for maintaining the correct structure.
 var mc_name: String = ""
 
-## Component that expands the functionality of the model to enable it to be
-## selected and deselected in the editor.
+# Components
 var selection := McBoneSelectableNodeComponentImpl.new(self)
+var movable := McBoneMovableComponentImpl.new(self)
 
 ## Create the Bone object with its coresponding scene
 static func new_scene(owning_model_: McModel) -> McBone:

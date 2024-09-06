@@ -45,9 +45,9 @@ var mc_uv: McCubeUv = null
 ## because for Nodes, Godot uses the tree structure to manage memory.
 var owning_bone: McBone = null
 
-## Component that expands the functionality of the model to enable it to be
-## selected and deselected in the editor.
+# Components
 var selection := McCubeSelectableComponentImpl.new(self)
+var movable := McCubeMovableComponentImpl.new(self)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

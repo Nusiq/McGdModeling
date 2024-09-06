@@ -209,3 +209,47 @@ func _input(event: InputEvent) -> void:
 		current_mode = Mode.BONE
 	elif event.is_action_pressed("shortcut.activate_mesh_mode", false, true):
 		current_mode = Mode.MESH
+
+func count_selected_objects() -> int:
+	var count := 0
+	match current_mode:
+		Mode.SCENE:
+			for model: McModel in get_tree().get_nodes_in_group("mc_models"):
+				if model.selection.is_selected:
+					count += 1
+		Mode.BONE:
+			if active_object == null:
+				return 0
+			for bone: McBone in active_object.get_all_bones():
+				if bone.selection.is_selected:
+					count += 1
+		Mode.MESH:
+			if active_object == null:
+				return 0
+			for bone: McBone in active_object.get_all_bones():
+				for cube: McCube in bone.get_cubes():
+					if cube.selection.is_selected:
+						count += 1
+	return count
+
+func get_selected_movable_objects() -> Array[MovableComponent]:
+	var result: Array[MovableComponent] = []
+	match current_mode:
+		Mode.SCENE:
+			for model: McModel in get_tree().get_nodes_in_group("mc_models"):
+				if model.selection.is_selected:
+					result.append(model.movable)
+		Mode.BONE:
+			if active_object == null:
+				return result
+			for bone: McBone in active_object.get_all_bones():
+				if bone.selection.is_selected:
+					result.append(bone.movable)
+		Mode.MESH:
+			if active_object == null:
+				return result
+			for bone: McBone in active_object.get_all_bones():
+				for cube: McCube in bone.get_cubes():
+					if cube.selection.is_selected:
+						result.append(cube.movable)
+	return result
