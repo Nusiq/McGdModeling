@@ -12,6 +12,11 @@ class MouseGesterConditionImpl extends MouseGesture.Condition:
 @onready var camera: Camera3D = $CameraTarget/CameraYaw/CameraPitch/Camera3D
 @onready var mouse_gesture: MouseGesture = $MouseGesture
 
+@onready var global_axes: AxesShader = $CameraTarget/CameraYaw/CameraPitch/Camera3D/AxesShader
+
+## Axes displayed during performing operations on objects (like moving)
+@onready var operation_axes: AxesShader = $CameraTarget/CameraYaw/CameraPitch/Camera3D/AxesShader2
+
 ## Staring zoom value for zoom mouse gesture
 var gesture_zoom_start := 0.0
 ## Starting rotation value for rotation mouse gesture
@@ -145,7 +150,20 @@ func update_move_gesture_plane() -> void:
 			_move_gesture_plane = Plane(
 				normals[best_option], # Normal
 				_move_gesture_start_world_space) # Point
-
+	# Get Euler angles from the plane normal. It's basically like the spherical
+	# coordinates, but we don't care about the radius. We need 2 angles to
+	# represent our desired rotation
+	var euler := Vector3(
+		0.0,
+		atan2(_move_gesture_plane.normal.x, -_move_gesture_plane.normal.z),
+		atan2(_move_gesture_plane.normal.y, _move_gesture_plane.normal.z)
+	) / PI * 180.0 # We need to convert to degrees
+	operation_axes.set_axis_rotation(euler)
+	operation_axes.set_axis_origin(_move_gesture_start_world_space)
+	# The operation_axes represent a plane. We're moving the object along the
+	# X and Y axes (the plane's surface)
+	operation_axes.set_axes_mask(AxesShader.Mask.X | AxesShader.Mask.Y)
+	
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
 ## of moving an object.
@@ -170,10 +188,11 @@ func _on_move_object_gesture(
 				_move_gesture_plane_type = MoveGesturePlaneType.CAMERA_PLANE
 		update_move_gesture_plane()
 	elif gesture_stage == MouseGesture.GestureStage.CANCELLED:
+		operation_axes.set_axes_mask(0)
 		for movable in _move_gesture_affected_objects:
 			movable.reset()
 		return
-
+	# UPDATE or SUCCESSFUL_END
 	var intersection: Variant = _move_gesture_plane.intersects_ray(
 		camera.project_ray_origin(_move_gesture_start_camera_space + delta_pos),
 		camera.project_ray_normal(_move_gesture_start_camera_space + delta_pos))
@@ -184,6 +203,8 @@ func _on_move_object_gesture(
 	else:
 		for movable in _move_gesture_affected_objects:
 			movable.move(_move_gesture_start_world_space)
+	if gesture_stage == MouseGesture.GestureStage.SUCCESSFUL_END:
+		operation_axes.set_axes_mask(0)
 
 ## Casts a ray from the mouse position to the 3D world.
 ## See the PhysicsDirectSpaceState3D.intersect_ray() for more information about
