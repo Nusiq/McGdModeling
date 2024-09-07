@@ -46,12 +46,21 @@ var gesture_pan_start := Vector3.ZERO
 var _move_gesture_start_world_space: Vector3 = Vector3.ZERO
 var _move_gesture_start_camera_space: Vector2 = Vector2.ZERO
 var _move_gesture_plane: Plane = Plane(Vector3.UP, Vector3.ZERO)
+var _move_gesture_line: Vector3Option = null
 var _move_gesture_affected_objects: Array[MovableComponent] = []
-enum MoveGesturePlaneType {
-	CAMERA_NEAREST_AXIS_ALIGNED,
-	CAMERA_PLANE,
+enum MoveGestureSpace {
+	CAMERA_NEAR_1,
+	CAMERA_NEAR_2,
+	CAMERA_NEAR_3,
+	CAMERA_ALIGNED,
+	X,
+	Y,
+	Z,
+	YZ,
+	XZ,
+	XY
 }
-var _move_gesture_plane_type := MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED
+var _move_gesture_space := MoveGestureSpace.CAMERA_ALIGNED
 
 ## Emitted when the camera global transform changes. Useful for tracking the
 ## camera position to handle the 3D gui element changes.
@@ -129,40 +138,106 @@ func change_zoom(starting_camera_position_z: float, delta: float) -> void:
 		camera.position.z = max_view_distance
 
 
-func update_move_gesture_plane() -> void:
-	match _move_gesture_plane_type:
-		MoveGesturePlaneType.CAMERA_PLANE:
-			_move_gesture_plane = Plane(
-				camera.global_transform.basis.z, # Normal
-				_move_gesture_start_world_space) # Point
-		MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED:
-			var normals: Array[Vector3] = [
-				Vector3.UP, Vector3.DOWN,
-				Vector3.LEFT, Vector3.RIGHT,
-				Vector3.FORWARD, Vector3.BACK]
-			var max_cos := normals[0].dot(camera.global_transform.basis.z)
-			var best_option := 0
-			for i in range(1, normals.size()):
-				var cos_ := normals[i].dot(camera.global_transform.basis.z)
-				if cos_ > max_cos:
-					max_cos = cos_
-					best_option = i
-			_move_gesture_plane = Plane(
-				normals[best_option], # Normal
-				_move_gesture_start_world_space) # Point
-	# Get Euler angles from the plane normal. It's basically like the spherical
-	# coordinates, but we don't care about the radius. We need 2 angles to
-	# represent our desired rotation
-	var euler := Vector3(
-		0.0,
-		atan2(_move_gesture_plane.normal.x, -_move_gesture_plane.normal.z),
-		atan2(_move_gesture_plane.normal.y, _move_gesture_plane.normal.z)
-	) / PI * 180.0 # We need to convert to degrees
-	operation_axes.set_axis_rotation(euler)
+class _CosIndexPair:
+	var cosine: float
+	var index: int
+	func _init(_cosine: float, _index: int) -> void:
+		cosine = _cosine
+		index = _index
+
+func _sort_normals_by_camera_alignment(
+		normals: Array[Vector3]) -> Array[Vector3]:
+	# Array of pairs (cosine, index)
+	var cosines: Array[_CosIndexPair] = []
+	for i in range(normals.size()):
+		cosines.append(_CosIndexPair.new(
+			normals[i].dot(camera.global_transform.basis.z),
+			i))
+	cosines.sort_custom(
+		func(a: _CosIndexPair, b: _CosIndexPair) -> bool:
+			return a.cosine > b.cosine)
+	var sorted_normals: Array[Vector3] = []
+	for cosine in cosines:
+		sorted_normals.append(normals[cosine.index])
+	return sorted_normals
+
+func update_move_gesture_space() -> void:
+	# Assume no line lock (which is true for most of the cases)
+	_move_gesture_line = null
+
+	if _move_gesture_space == MoveGestureSpace.CAMERA_ALIGNED:
+		_move_gesture_plane = Plane(
+			camera.global_transform.basis.z, # Normal
+			_move_gesture_start_world_space) # Point
+	elif _move_gesture_space in [
+			MoveGestureSpace.CAMERA_NEAR_1,
+			MoveGestureSpace.CAMERA_NEAR_2,
+			MoveGestureSpace.CAMERA_NEAR_3,
+			MoveGestureSpace.X, MoveGestureSpace.Y, MoveGestureSpace.Z]:
+		# The single axis aligned movemend is handled a little bit differently
+		# but we still project to a plane.
+		var normals: Array[Vector3] = []
+		# Moving along line X - set line to X, else add left/right
+		if _move_gesture_space == MoveGestureSpace.X:
+			_move_gesture_line = Vector3Option.new(Vector3.RIGHT)
+		else:
+			normals.append_array([Vector3.LEFT, Vector3.RIGHT])
+		# Moving along line Y - set line to Y, else add up/down
+		if _move_gesture_space == MoveGestureSpace.Y:
+			_move_gesture_line = Vector3Option.new(Vector3.UP)
+		else:
+			normals.append_array([Vector3.UP, Vector3.DOWN])
+		# Moving along line Z - set line to Z, else add forward/back
+		if _move_gesture_space == MoveGestureSpace.Z:
+			_move_gesture_line = Vector3Option.new(Vector3.FORWARD)
+		else:
+			normals.append_array([Vector3.FORWARD, Vector3.BACK])
+
+		# If it's the CAMERA_NEAR_1 all normals are valid.
+		normals = _sort_normals_by_camera_alignment(normals)
+		var index := 0
+		match _move_gesture_space:
+			MoveGestureSpace.CAMERA_NEAR_2:
+				index = 1
+			MoveGestureSpace.CAMERA_NEAR_3:
+				index = 2
+		_move_gesture_plane = Plane(
+			normals[index], # Normal
+			_move_gesture_start_world_space) # Point
+	elif _move_gesture_space == MoveGestureSpace.XY:
+		_move_gesture_plane = Plane(
+			Vector3.FORWARD, _move_gesture_start_world_space)
+	elif _move_gesture_space == MoveGestureSpace.XZ:
+		_move_gesture_plane = Plane(
+			Vector3.UP, _move_gesture_start_world_space)
+	elif _move_gesture_space == MoveGestureSpace.YZ:
+		_move_gesture_plane = Plane(
+			Vector3.RIGHT, _move_gesture_start_world_space)
+
 	operation_axes.set_axis_origin(_move_gesture_start_world_space)
 	# The operation_axes represent a plane. We're moving the object along the
-	# X and Y axes (the plane's surface)
-	operation_axes.set_axes_mask(AxesShader.Mask.X | AxesShader.Mask.Y)
+	# X and Y axes (the plane's surface), unless it's locked to a single axis.
+	match _move_gesture_space:
+		MoveGestureSpace.X:
+			operation_axes.set_axis_rotation(Vector3.ZERO)
+			operation_axes.set_axes_mask(AxesShader.Mask.X)
+		MoveGestureSpace.Y:
+			operation_axes.set_axis_rotation(Vector3.ZERO)
+			operation_axes.set_axes_mask(AxesShader.Mask.Y)
+		MoveGestureSpace.Z:
+			operation_axes.set_axis_rotation(Vector3.ZERO)
+			operation_axes.set_axes_mask(AxesShader.Mask.Z)
+		_:
+			# Get Euler angles from the plane normal. It's basically like the spherical
+			# coordinates, but we don't care about the radius. We need 2 angles to
+			# represent our desired rotation
+			var euler := Vector3(
+				0.0,
+				atan2(_move_gesture_plane.normal.x, -_move_gesture_plane.normal.z),
+				atan2(_move_gesture_plane.normal.y, _move_gesture_plane.normal.z)
+			) / PI * 180.0 # We need to convert to degrees
+			operation_axes.set_axis_rotation(euler)
+			operation_axes.set_axes_mask(AxesShader.Mask.X | AxesShader.Mask.Y)
 	
 
 ## Called from the child node $MouseGesture. Handles the mouse gesture
@@ -178,15 +253,19 @@ func _on_move_object_gesture(
 		_move_gesture_start_world_space /= _move_gesture_affected_objects.size()
 		_move_gesture_start_camera_space = camera.unproject_position(
 			_move_gesture_start_world_space)
-		_move_gesture_plane_type = MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED
-		update_move_gesture_plane()
+		_move_gesture_space = MoveGestureSpace.CAMERA_ALIGNED
+		update_move_gesture_space()
 	elif gesture_stage == MouseGesture.GestureStage.RETAPPED:
-		match _move_gesture_plane_type:
-			MoveGesturePlaneType.CAMERA_PLANE:
-				_move_gesture_plane_type = MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED
-			MoveGesturePlaneType.CAMERA_NEAREST_AXIS_ALIGNED:
-				_move_gesture_plane_type = MoveGesturePlaneType.CAMERA_PLANE
-		update_move_gesture_plane()
+		match _move_gesture_space:
+			MoveGestureSpace.CAMERA_ALIGNED:
+				_move_gesture_space = MoveGestureSpace.CAMERA_NEAR_1
+			MoveGestureSpace.CAMERA_NEAR_1:
+				_move_gesture_space = MoveGestureSpace.CAMERA_NEAR_2
+			MoveGestureSpace.CAMERA_NEAR_2:
+				_move_gesture_space = MoveGestureSpace.CAMERA_NEAR_3
+			_:
+				_move_gesture_space = MoveGestureSpace.CAMERA_ALIGNED
+		update_move_gesture_space()
 	elif gesture_stage == MouseGesture.GestureStage.CANCELLED:
 		operation_axes.set_axes_mask(0)
 		for movable in _move_gesture_affected_objects:
@@ -197,12 +276,18 @@ func _on_move_object_gesture(
 		camera.project_ray_origin(_move_gesture_start_camera_space + delta_pos),
 		camera.project_ray_normal(_move_gesture_start_camera_space + delta_pos))
 	if intersection is Vector3:
+		if _move_gesture_line != null:
+			# Project the intersection point onto the line
+			intersection = (
+				intersection - _move_gesture_start_world_space
+			).project(_move_gesture_line.value)
+			intersection = intersection + _move_gesture_start_world_space
 		var delta := (intersection as Vector3) - _move_gesture_start_world_space
 		for movable in _move_gesture_affected_objects:
 			movable.move(delta)
 	else:
 		for movable in _move_gesture_affected_objects:
-			movable.move(_move_gesture_start_world_space)
+			movable.move(Vector3.ZERO)
 	if gesture_stage == MouseGesture.GestureStage.SUCCESSFUL_END:
 		operation_axes.set_axes_mask(0)
 
@@ -271,3 +356,22 @@ func _input(event: InputEvent) -> void:
 			mouse_gesture.get_local_mouse_position(),
 			Input.is_key_pressed(KEY_SHIFT)
 		)
+	elif mouse_gesture.current_gesture == MouseGesture.Gesture.MOVING_OBJECT:
+		if event.is_action_pressed("shortcut.move_object.lock_axis_x", false, true):
+			_move_gesture_space = MoveGestureSpace.X
+			update_move_gesture_space()
+		elif event.is_action_pressed("shortcut.move_object.lock_axis_y", false, true):
+			_move_gesture_space = MoveGestureSpace.Y
+			update_move_gesture_space()
+		elif event.is_action_pressed("shortcut.move_object.lock_axis_z", false, true):
+			_move_gesture_space = MoveGestureSpace.Z
+			update_move_gesture_space()
+		elif event.is_action_pressed("shortcut.move_object.lock_surface_x", false, true):
+			_move_gesture_space = MoveGestureSpace.YZ
+			update_move_gesture_space()
+		elif event.is_action_pressed("shortcut.move_object.lock_surface_y", false, true):
+			_move_gesture_space = MoveGestureSpace.XZ
+			update_move_gesture_space()
+		elif event.is_action_pressed("shortcut.move_object.lock_surface_z", false, true):
+			_move_gesture_space = MoveGestureSpace.XY
+			update_move_gesture_space()

@@ -84,6 +84,7 @@ mesh = SubResource("QuadMesh_vieyb")
 
 [node name="AxesShader2" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("4_nita6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+visible = false
 mesh = SubResource("QuadMesh_b4wlx")
 
 [node name="SelectionOutline" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("5_mmfi7")]
