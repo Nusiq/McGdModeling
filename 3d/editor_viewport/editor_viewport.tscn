@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://byggwvgy1weio"]
+[gd_scene load_steps=14 format=3 uid="uid://byggwvgy1weio"]
 
 [ext_resource type="Script" path="res://3d/editor_viewport/editor_viewport.gd" id="1_lx2y6"]
 [ext_resource type="PackedScene" uid="uid://smlmre000euv" path="res://ui/mouse_gesture/mouse_gesture.tscn" id="2_jv0st"]
 [ext_resource type="PackedScene" uid="uid://d2jiujm8jibch" path="res://3d/surface_grid_shader/surface_grid_shader.tscn" id="3_dhc55"]
 [ext_resource type="PackedScene" uid="uid://mhc63t1fjtgg" path="res://3d/axes_shader/axes_shader.tscn" id="4_nita6"]
+[ext_resource type="Shader" path="res://3d/axes_shader/axes.gdshader" id="5_8gxbq"]
 [ext_resource type="PackedScene" uid="uid://dcr26yxltr5s" path="res://3d/selection_outline/selection_outline.tscn" id="5_mmfi7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hea0x"]
@@ -20,6 +21,40 @@ sky_material = SubResource("ProceduralSkyMaterial_hea0x")
 background_mode = 2
 sky = SubResource("Sky_vaoec")
 tonemap_mode = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wlw1i"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("5_8gxbq")
+shader_parameter/line_width = 0.2
+shader_parameter/albedo_x = Color(1, 0, 0, 1)
+shader_parameter/albedo_y = Color(0, 1, 0, 1)
+shader_parameter/albedo_z = Color(0, 0, 1, 1)
+shader_parameter/max_line_alpha = 1.0
+shader_parameter/axis_rotation = Vector3(0, 0, 0)
+shader_parameter/axis_origin = Vector3(0, 0, 0)
+shader_parameter/axes_mask = 7
+
+[sub_resource type="QuadMesh" id="QuadMesh_vieyb"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_wlw1i")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5q1yx"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("5_8gxbq")
+shader_parameter/line_width = 0.3
+shader_parameter/albedo_x = Color(1, 0.692, 0.16, 1)
+shader_parameter/albedo_y = Color(1, 0.690196, 0.160784, 1)
+shader_parameter/albedo_z = Color(1, 0.690196, 0.160784, 1)
+shader_parameter/max_line_alpha = 1.0
+shader_parameter/axis_rotation = Vector3(0, 0, 0)
+shader_parameter/axis_origin = Vector3(0, 0, 0)
+shader_parameter/axes_mask = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_b4wlx"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_5q1yx")
 
 [node name="EditorViewport" type="Node3D"]
 script = ExtResource("1_lx2y6")
@@ -45,6 +80,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
 
 [node name="AxesShader" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("4_nita6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+mesh = SubResource("QuadMesh_vieyb")
+
+[node name="AxesShader2" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("4_nita6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+visible = false
+mesh = SubResource("QuadMesh_b4wlx")
 
 [node name="SelectionOutline" parent="CameraTarget/CameraYaw/CameraPitch/Camera3D" instance=ExtResource("5_mmfi7")]
 outline_color = Color(0.929412, 0.341176, 0, 1)

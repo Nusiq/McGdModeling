@@ -46,10 +46,9 @@ var active_bone: McBone = null:
 		# Set the new active object
 		active_bone = value
 
-## Component that expands the functionality of the model to enable it to be
-## selected and deselected in the editor.
+# Components
 var selection := McModelSelectableComponentImpl.new(self)
-
+var movable := McModelMovableComponentImpl.new(self)
 
 ## Adds new child bone to this model. Returns a handle for the newly created
 ## object. Optionally, a McBone object can be passed, in which case no new

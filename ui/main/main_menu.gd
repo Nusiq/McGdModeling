@@ -7,6 +7,8 @@ extends Node3D
 
 func _ready() -> void:
 	ModeManager.mode_changed.connect(_on_mode_changed)
+	model_file_dialog.filters = ["*.json"]
+	texture_file_dialog.filters = ["*.png"]
 
 func _on_cached_file_dialog_model_file_selected(path: String) -> void:
 	mc_model.remove_bones()

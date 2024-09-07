@@ -45,9 +45,9 @@ var mc_uv: McCubeUv = null
 ## because for Nodes, Godot uses the tree structure to manage memory.
 var owning_bone: McBone = null
 
-## Component that expands the functionality of the model to enable it to be
-## selected and deselected in the editor.
+# Components
 var selection := McCubeSelectableComponentImpl.new(self)
+var movable := McCubeMovableComponentImpl.new(self)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -316,3 +316,12 @@ func view_selected() -> void:
 ## Makes the cube appear as deselected in the editor.
 func view_deselected() -> void:
 	mesh_instance.layers = 1
+
+
+## Resets the 'position' property and transfers it to the Minecraft properties
+## in such a way that everything looks as before the operation.
+func transfer_position_to_mc() -> void:
+	var position_extra := position * Convertions.GD_MC_LOC
+	mc_origin = mc_origin + position_extra
+	mc_pivot = mc_pivot + position_extra
+	position = Vector3.ZERO

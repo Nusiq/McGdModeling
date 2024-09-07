@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://3d/axes_shader/axes_shader.gd" id="2_g30qs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d3fhd"]
+resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("1_1tejb")
 shader_parameter/line_width = 0.2
@@ -16,6 +17,7 @@ shader_parameter/axis_origin = Vector3(0, 0, 0)
 shader_parameter/axes_mask = 7
 
 [sub_resource type="QuadMesh" id="QuadMesh_t1ufe"]
+resource_local_to_scene = true
 material = SubResource("ShaderMaterial_d3fhd")
 
 [node name="AxesShader" type="MeshInstance3D"]
