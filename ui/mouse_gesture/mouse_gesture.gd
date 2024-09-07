@@ -9,24 +9,39 @@ class Condition:
 	func zoom_gesture_condition() -> bool: return true
 	func move_object_gesture_condition() -> bool: return true
 
+## Possible types of gestures handled by MouseGesture.
 enum Gesture {
-	ROTATING, # Rotating the view
-	PANNING, # Panning the view
-	ZOOMING, # Zooming the view
-	MOVING_OBJECT, # Moving an object
+	## Rotating the view
+	ROTATING,
+	## Panning the view
+	PANNING,
+	## Zooming the view
+	ZOOMING,
+	## Moving an object
+	MOVING_OBJECT,
+	## No gesture
 	NONE,
 }
+## The currently performed gesture.
 var current_gesture := Gesture.NONE
+## The starting position of the gesture.
 var gestrue_start_position := Vector2.ZERO
 
+## Used in signals emitted by MouseGesture to indicate the stage of the gesture.
 enum GestureStage {
+	## The gesture has just started.
 	JUST_STARTED,
+	## The gesture ended successfully.
 	SUCCESSFUL_END,
+	## The gesture was cancelled.
 	CANCELLED,
+	## The gesture is still ongoing.
 	UPDATE,
+	## User pressed the gesture key again (used for object gestures).
 	RETAPPED
 }
 
+## Emits the gesture signal based on the current gesture type.
 func _emit_gesture_signal(gesture_stage: GestureStage) -> void:
 	var delta_pos := (
 		get_global_mouse_position() - gestrue_start_position)
@@ -40,16 +55,22 @@ func _emit_gesture_signal(gesture_stage: GestureStage) -> void:
 		Gesture.MOVING_OBJECT:
 			move_object_gesture.emit(delta_pos, gesture_stage)
 
+## Rotating the view gesture signal.
 signal rotate_gesture(
 	delta_pos: Vector2, gesture_stage: GestureStage)
+## Panning the view gesture signal.
 signal pan_gesture(
 	delta_pos: Vector2, gesture_stage: GestureStage)
+## Zooming the view gesture signal.
 signal zoom_gesture(
 	delta_pos: Vector2, gesture_stage: GestureStage)
+## Moving an object gesture signal.
 signal move_object_gesture(
 	delta_pos: Vector2, gesture_stage: GestureStage)
 
 
+## The conditions for triggering the mouse gestures, can be overridden to limit
+## when the gestures are triggered.
 var condition := Condition.new()
 
 ## Called every frame automatically.

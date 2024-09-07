@@ -7,6 +7,8 @@ var owner: McModel = null
 func _init(_owner: McModel) -> void:
 	owner = _owner
 
+# IMPLEMENTATION OF THE MOVABLE COMPONENT INTERFACE
+
 func get_position() -> Vector3:
 	return owner.global_position
 

@@ -11,6 +11,8 @@ var _pivot_offset: Vector3 = Vector3.ZERO
 func _init(_owner: McCube) -> void:
 	owner = _owner
 
+# IMPLEMENTATION OF THE MOVABLE COMPONENT INTERFACE
+
 func get_position() -> Vector3:
 	_pivot_offset = owner.mc_pivot * Convertions.MC_GD_LOC
 	return owner.global_position + _pivot_offset

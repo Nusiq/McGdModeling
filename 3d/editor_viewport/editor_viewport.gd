@@ -38,28 +38,55 @@ var gesture_pan_start := Vector3.ZERO
 @onready var max_view_distance := UserConfig.load_float(
 	"editor_viewport.max_view_distance", 1000, 100, 10_000.0)
 
-# Tmp variables to track various states
+# Tmp variables to track various states of the camera
 @onready var _prev_global_camera_transform: Transform3D = \
 	get_global_camera_transform()
 @onready var _prev_global_camera_target_transform: Transform3D = \
 	get_global_camera_target_transform()
+
+
+# Tmp variables to track the move object operation
+## The center of mass of moving object at the start of the move operation in
+## the world space.
 var _move_gesture_start_world_space: Vector3 = Vector3.ZERO
+## The center of mass of moving object at the start of the move operation in
+## the camera space.
 var _move_gesture_start_camera_space: Vector2 = Vector2.ZERO
+## The plane used to project the mouse cursor to determine how to move the
+## object.
 var _move_gesture_plane: Plane = Plane(Vector3.UP, Vector3.ZERO)
+## The line that further restricts the movement of the object. If null, the
+## movement happens on the plane, otherwise, the movement is additionally
+## projected onto the line.
 var _move_gesture_line: Vector3Option = null
+
+## The selected objects at the start of the move operation.
 var _move_gesture_affected_objects: Array[MovableComponent] = []
+
+## The type of the move gesture.
 enum MoveGestureSpace {
+	## Aligned to 2 global axes, as similar as possible to camera plane.
 	CAMERA_NEAR_1,
+	## Aligned to 2 global axes, the second most similar to camera plane.
 	CAMERA_NEAR_2,
+	## Aligned to 2 global axes, the least similar to camera plane.
 	CAMERA_NEAR_3,
+	## Aligned to the camera plane (perpendicular to the camera direction).
 	CAMERA_ALIGNED,
+	## Locked to the X axis.
 	X,
+	## Locked to the Y axis.
 	Y,
+	## Locked to the Z axis.
 	Z,
+	## Locked to the XY plane.
 	YZ,
+	## Locked to the XZ plane.
 	XZ,
+	## Locked to the YZ plane.
 	XY
 }
+## Currently selected move gesture space.
 var _move_gesture_space := MoveGestureSpace.CAMERA_ALIGNED
 
 ## Emitted when the camera global transform changes. Useful for tracking the
@@ -138,6 +165,7 @@ func change_zoom(starting_camera_position_z: float, delta: float) -> void:
 		camera.position.z = max_view_distance
 
 
+## Used in _sort_normals_by_camera_alignment to store pairs of float and int.
 class _CosIndexPair:
 	var cosine: float
 	var index: int
@@ -145,6 +173,8 @@ class _CosIndexPair:
 		cosine = _cosine
 		index = _index
 
+## Takes a list of normal vectors of planes and sorts them by how much they are
+## aligned with the camera. The most aligned plane is the first in the list.
 func _sort_normals_by_camera_alignment(
 		normals: Array[Vector3]) -> Array[Vector3]:
 	# Array of pairs (cosine, index)
@@ -161,6 +191,8 @@ func _sort_normals_by_camera_alignment(
 		sorted_normals.append(normals[cosine.index])
 	return sorted_normals
 
+## Updates the move gesture space based on the current _move_gesture_space.
+## Calculates the plane etc.
 func update_move_gesture_space() -> void:
 	# Assume no line lock (which is true for most of the cases)
 	_move_gesture_line = null
