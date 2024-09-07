@@ -91,7 +91,7 @@ func _on_rotate_gesture(
 	var r := (
 		1
 		if gesture_rotate_start.x > 3.0 / 2.0 * PI
-		|| gesture_rotate_start.x < PI / 2
+		or gesture_rotate_start.x < PI / 2
 		else -1)
 	camera_yaw.rotation.y = fposmod(
 		gesture_rotate_start.y - r * delta_pos.x * rotation_sensitivity, TAU)

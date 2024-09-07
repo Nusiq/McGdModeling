@@ -30,7 +30,7 @@ func connect_child_references() -> void:
 		mc_rotation = value
 		if pivot == null:
 			return
-		pivot.rotation = value * PI / 180 * Convertions.MC_GD_ROT
+		pivot.rotation_degrees = value * Convertions.MC_GD_ROT
 	get:
 		return mc_rotation
 
