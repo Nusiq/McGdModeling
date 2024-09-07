@@ -16,3 +16,6 @@ func move(_delta: Vector3) -> void:
 
 func reset() -> void:
 	assert(false, "Not implemented")
+
+func stop_moving() -> void:
+	assert(false, "Not implemented")

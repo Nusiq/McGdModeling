@@ -8,6 +8,9 @@ class_name Convertions
 ## and Godot coordinates.
 const MC_GD_LOC = Vector3(-1, 1, 1)
 
+## Revers operation of the MC_GD_LOC (happens to be the same value).
+const GD_MC_LOC = MC_GD_LOC
+
 ## Minecraft flips the Y rotation axis (unlike the other rotations it's
 ## clockwise, not counter clockwise when the axis is facing towards the
 ## observer).

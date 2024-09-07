@@ -316,3 +316,12 @@ func view_selected() -> void:
 ## Makes the cube appear as deselected in the editor.
 func view_deselected() -> void:
 	mesh_instance.layers = 1
+
+
+## Resets the 'position' property and transfers it to the Minecraft properties
+## in such a way that everything looks as before the operation.
+func transfer_position_to_mc() -> void:
+	var position_extra := position * Convertions.GD_MC_LOC
+	mc_origin = mc_origin + position_extra
+	mc_pivot = mc_pivot + position_extra
+	position = Vector3.ZERO

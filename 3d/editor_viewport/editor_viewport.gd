@@ -289,6 +289,8 @@ func _on_move_object_gesture(
 		for movable in _move_gesture_affected_objects:
 			movable.move(Vector3.ZERO)
 	if gesture_stage == MouseGesture.GestureStage.SUCCESSFUL_END:
+		for movable in _move_gesture_affected_objects:
+			movable.stop_moving()
 		operation_axes.set_axes_mask(0)
 
 ## Casts a ray from the mouse position to the 3D world.

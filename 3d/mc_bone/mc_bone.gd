@@ -143,3 +143,17 @@ func view_selected() -> void:
 func view_deselected() -> void:
 	for cube in get_cubes():
 		cube.mesh_instance.layers = 1
+
+
+## Resets the 'position' property and transfers it to the Minecraft properties
+## in such a way that everything looks as before the operation.
+func transfer_position_to_mc() -> void:
+	var position_extra := position * Convertions.GD_MC_LOC
+	mc_pivot = mc_pivot + position_extra
+	for bone in get_bones():
+		bone.position = position
+		bone.transfer_position_to_mc()
+	for cube in get_cubes():
+		cube.position = position
+		cube.transfer_position_to_mc()
+	position = Vector3.ZERO
