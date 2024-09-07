@@ -6,7 +6,7 @@
 script = ExtResource("1_itjx3")
 
 [node name="Pivot" type="Marker3D" parent="."]
-rotation_order = 0
+rotation_order = 5
 
 [node name="CounterPivot" type="Marker3D" parent="Pivot"]
-rotation_order = 0
+rotation_order = 5
