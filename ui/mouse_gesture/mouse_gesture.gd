@@ -89,7 +89,7 @@ func _input(event: InputEvent) -> void:
 			zoom_gesture.emit(
 				Vector2.ZERO, GestureStage.JUST_STARTED)
 		elif (
-				event.is_action_pressed("gesture.move_object", false, true)
+				event.is_action_pressed("shortcut.move_object", false, true)
 				and condition.move_object_gesture_condition()):
 			current_gesture = Gesture.MOVING_OBJECT
 			gestrue_start_position = get_global_mouse_position()
@@ -120,7 +120,7 @@ func _input(event: InputEvent) -> void:
 		current_gesture = Gesture.NONE
 	elif (
 		current_gesture == Gesture.MOVING_OBJECT
-		and event.is_action_pressed("gesture.move_object", false, true)
+		and event.is_action_pressed("shortcut.move_object", false, true)
 	):
 		# Detect the retapping of the gesture
 		_emit_gesture_signal(GestureStage.RETAPPED)
